@@ -13,4 +13,14 @@ class Category extends Model
         'type_id',
         'user_id',
     ];
+
+    public function type()
+    {
+        return $this->hasOne(Type::class, 'id', 'type_id');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }
