@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -47,8 +48,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function categories()
+    public function categories() : HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Category::class, 'user_id', 'id');
+    }
+
+    public function operations() : HasMany
+    {
+        return $this->hasMany(Operation::class, 'user_id', 'id');
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\OperationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Http\Request;
@@ -19,3 +20,5 @@ Route::any('/tokens/create', function (Request $request) {
     $token = $request->user()->createToken($request->token_name);
     return ['token' => $token->plainTextToken];
 });
+Route::get('/operation/', [OperationController::class, 'index'])->name('operation');
+Route::post('/operation/', [OperationController::class, 'store'])->name('operation');

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Type;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +12,10 @@ class IndexController extends Controller
     public function index() : View
     {
         $user = Auth::user();
-        return view('index', ['user' => $user]);
+
+        return view('index', [
+            'user' => $user,
+        ]);
     }
 
     public function login() : View
