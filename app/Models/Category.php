@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use \Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @property int              $id
+ * @property string           $name
+ * @property int              $type_id
+ * @property int              $user_id
+ * @property \App\Models\Type $type
+ * @property \App\Models\User $user
+ * @method static Builder     serCategories($user_id)
+ */
 class Category extends Model
 {
     protected $table = 'categories';
@@ -25,6 +34,14 @@ class Category extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    /**
+     * Отбор категорий пользователей и категорий дефолтных категорий операций
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int                                   $user_id
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeUserCategories(Builder $query, int $user_id) : Builder
     {
         return $query->where('user_id', $user_id)->orWhereNull('user_id');
