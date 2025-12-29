@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnDelete();
             $table->foreignId('free_money_id')->constrained('free_money')->cascadeOnDelete()->cascadeOnDelete();
-            $table->float('summ');
+            $table->decimal('amount', 20, 2);
             $table->timestamps();
         });
     }

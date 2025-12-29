@@ -42,13 +42,15 @@ class OperationController extends Controller
      */
     public function store(Request $request) : RedirectResponse
     {
-        Operation::create([
+        $o = Operation::create([
             'user_id' => Auth::id(),
             'category_id' => $request['category'],
             'type_id' => Category::find($request['category'])->type_id,
             'summ' => $request['summ'],
             'comment' => $request['comment'],
         ]);
+
+
 
         return redirect(route('operation'));
     }

@@ -36,7 +36,6 @@ class Category extends Model
 
     /**
      * Отбор категорий пользователей и категорий дефолтных категорий операций
-     *
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param int                                   $user_id
      *

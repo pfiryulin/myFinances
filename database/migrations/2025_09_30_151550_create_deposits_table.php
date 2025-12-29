@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->float('amount')->nullable(false)->default(0);
+            $table->decimal('amount', 20, 2)->nullable(false)->default(0);
             $table->string('comment')->nullable();
             $table->timestamps();
         });

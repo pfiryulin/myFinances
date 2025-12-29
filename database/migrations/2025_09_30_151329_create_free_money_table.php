@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('free_money', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->float('amount');
+            $table->decimal('amount', 20, 2)->default(0);
             $table->timestamps();
         });
     }

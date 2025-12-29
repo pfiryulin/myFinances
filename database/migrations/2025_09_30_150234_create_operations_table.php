@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('type_id')->constrained('types')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->float('summ');
+            $table->decimal('amount', 20, 2);
             $table->string('comment')->nullable();
             $table->timestamps();
         });
