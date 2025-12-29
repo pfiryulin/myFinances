@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    const TYPES = [
+        'Доход',
+        'Расход',
+        'Депозит',
+    ];
+
     /**
      * Run the migrations.
      */
@@ -16,6 +22,18 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
+
+        if(Schema::hasTable('types'))
+        {
+            foreach (self::TYPES as $type)
+            {
+                DB::table('types')->insert(
+                    [
+                        ['name' => $type],
+                    ]
+                );
+            }
+        }
     }
 
     /**

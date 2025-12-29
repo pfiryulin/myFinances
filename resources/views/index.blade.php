@@ -4,6 +4,5 @@
     </li>
 </ul>
 
-@dump($user)
 
 <a href="{{ route('logout') }}">Exit</a>

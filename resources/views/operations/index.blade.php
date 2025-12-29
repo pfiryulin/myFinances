@@ -1,7 +1,7 @@
 @dump($opertaions)
 <table>
     <tr>
-        <th>##</th>
+        <th>№</th>
         <th>Сумма</th>
         <th>Категория</th>
         <th>Тип</th>

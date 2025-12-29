@@ -13,9 +13,7 @@ class IndexController extends Controller
     {
         $user = Auth::user();
 
-        return view('index', [
-            'user' => $user,
-        ]);
+        return view('index');
     }
 
     public function login() : View

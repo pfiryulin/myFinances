@@ -17,17 +17,15 @@ class OperationController extends Controller
      */
     public function index() : View
     {
-        dump(Auth::id());
         $opertaions = Operation::where('user_id', Auth::id())
                                ->with([
                                    'category',
                                    'type',
                                ])
                                ->get();
-        dump($opertaions);
-        $categories = Category::whereIn('user_id',[Auth::id(), 1])->get();
-//        $categories = Category::where('user_id', 1)->get();
-        dump($categories);
+
+        $categories = Category::userCategories(Auth::id())->get();
+
         return view('operations.index', compact('opertaions', 'categories'));
     }
 
