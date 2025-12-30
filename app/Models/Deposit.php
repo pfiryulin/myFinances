@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int $id
  * @property int $user_id
  * @property string $name
  * @property int $amount
@@ -34,5 +35,20 @@ class Deposit extends Model
     public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function register(
+        int $userId,
+        string $name,
+        float $amount,
+        string $comment = null,
+    ) : self
+    {
+        return static::create([
+            'user_id' => $userId,
+            'name' => $name,
+            'amount' => $amount,
+            'comment' => $comment,
+        ]);
     }
 }

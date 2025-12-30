@@ -5,6 +5,7 @@ use App\Http\Controllers\OperationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Http\Request;
+use \App\Http\Controllers\DepositController;
 
 Route::get('/', [IndexController::class, 'index'])->middleware('auth')->name('index');
 Route::get('/registration', function () {
@@ -22,3 +23,6 @@ Route::any('/tokens/create', function (Request $request) {
 });
 Route::get('/operation/', [OperationController::class, 'index'])->name('operation');
 Route::post('/operation/', [OperationController::class, 'store'])->name('operation');
+Route::get('/deposite/', [DepositController::class, 'index'])->name('deposit');
+Route::post('/deposite/update/', [DepositController::class, 'edit'])->name('deposit-update');
+Route::post('/deposite/create/', [DepositController::class, 'store'])->name('deposit-create');

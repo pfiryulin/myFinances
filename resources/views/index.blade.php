@@ -1,8 +1,6 @@
-<ul>
-    <li>
-        <a href="{{ route('operation') }}">Операции</a>
-    </li>
-</ul>
+@extends('app')
+@section('content')
+    <h3>здесь должен быть даш борд</h3>
+@endsection
 
 
-<a href="{{ route('logout') }}">Exit</a>

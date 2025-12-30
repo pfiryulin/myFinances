@@ -9,6 +9,10 @@ use App\Models\Type;
 
 class FreeMoneyAction
 {
+    //todo перенести сюда получение текущей суммы свободных средств.
+    //todo перенести сюда проверку сумы свободных средств при расходных операциях, в том числе при создании и
+    // пополнении  депозита
+
     public static function updateAmount(Operation $operation)
     {
         $freeMoneyItem = FreeMoney::where('user_id', $operation->user_id)->first();
