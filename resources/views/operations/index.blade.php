@@ -1,4 +1,6 @@
-@dump($opertaions)
+<div>
+    Свободные средства: {{ $freeMoney }} ₽
+</div>
 <table>
     <tr>
         <th>№</th>

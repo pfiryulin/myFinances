@@ -23,7 +23,7 @@ class Operation extends Model
         'user_id',
         'category_id',
         'type_id',
-        'summ',
+        'amount',
         'comment',
     ];
 

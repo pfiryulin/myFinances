@@ -13,9 +13,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Type extends Model
 {
     protected $table = 'types';
-    protected $fillable= ['name'];
+    protected $fillable = ['name'];
 
-    /**
+    const INCOME = 1;
+    const EXPENDITURE = 2;
+    const DEPOSIT = 3;
+
+
+        /**
      * Получаем все категории по типу
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

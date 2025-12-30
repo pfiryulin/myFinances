@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $comment
  * @property \App\Models\User $user
  */
-//todo изменить amount на decimal с ограничением 2-е цифры после точки
+
 class Deposit extends Model
 {
     protected $table = 'deposits';

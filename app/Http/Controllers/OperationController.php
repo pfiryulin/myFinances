@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Base\BaseActions\FreeMoneyAction;
 use App\Models\Category;
+use App\Models\FreeMoney;
 use App\Models\Operation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class OperationController extends Controller
@@ -26,7 +27,18 @@ class OperationController extends Controller
 
         $categories = Category::userCategories(Auth::id())->get();
 
-        return view('operations.index', compact('opertaions', 'categories'));
+        $freeMoney = FreeMoney::where('user_id', Auth::id())->first();
+
+        if(!$freeMoney)
+        {
+            $freeMoney = 0;
+        }
+        else
+        {
+            $freeMoney = $freeMoney->amount;
+        }
+
+        return view('operations.index', compact('opertaions', 'categories', 'freeMoney'));
     }
 
     /**
@@ -46,11 +58,11 @@ class OperationController extends Controller
             'user_id' => Auth::id(),
             'category_id' => $request['category'],
             'type_id' => Category::find($request['category'])->type_id,
-            'summ' => $request['summ'],
+            'amount' => $request['summ'],
             'comment' => $request['comment'],
         ]);
 
-
+        FreeMoneyAction::updateAmount($o);
 
         return redirect(route('operation'));
     }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('type_id')->constrained('types')->cascadeOnUpdate()->noActionOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -26,6 +27,10 @@ return new class extends Migration
      */
     public function down() : void
     {
+        Schema::table('categories', function (Blueprint $table)
+        {
+            $table->dropSoftDeletes();
+        });
         Schema::dropIfExists('categories');
     }
 };

@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('free_money', function (Blueprint $table) {
+        Schema::create('deposit_history', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->noActionOnDelete();
-            $table->decimal('amount', 20, 2)->default(0);
+            $table->foreignId('deposit_id')->constrained('deposits')->cascadeOnUpdate();
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('free_money');
+        Schema::dropIfExists('deposit_history');
     }
 };
