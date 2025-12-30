@@ -12,6 +12,9 @@ use Illuminate\View\View;
 // отображаться в сумме депозита и общем балансе
 class DepositController extends Controller
 {
+    /**
+     * @return \Illuminate\View\View
+     */
     public function index() : View
     {
         $deposits = Deposit::where('user_id', Auth::id())->get();
@@ -19,6 +22,12 @@ class DepositController extends Controller
         return view('deposit.index', compact('deposits'));
     }
 
+    /**
+     * Create a new deposit
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request) : RedirectResponse
     {
         $newDeposite = Deposit::create([

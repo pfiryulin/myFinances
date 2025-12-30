@@ -28,7 +28,7 @@ class Deposit extends Model
     public const FROM_DEPOSIT = 15;
 
     /**
-     * Получаем владельца депозита
+     * Get the deposit owner
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -37,6 +37,16 @@ class Deposit extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * create a new deposit
+     *
+     * @param int         $userId
+     * @param string      $name
+     * @param float       $amount
+     * @param string|null $comment
+     *
+     * @return self
+     */
     public static function register(
         int $userId,
         string $name,
