@@ -23,6 +23,9 @@ class Deposit extends Model
         'comment',
     ];
 
+    public const TO_DEPOSIT = 14;
+    public const FROM_DEPOSIT = 15;
+
     /**
      * Получаем владельца депозита
      *

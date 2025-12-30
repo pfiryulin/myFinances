@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Base\BaseActions\FreeMoneyAction;
 use App\Models\Category;
+use App\Models\Deposit;
 use App\Models\FreeMoney;
 use App\Models\Operation;
+use App\Models\Type;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,19 +28,12 @@ class OperationController extends Controller
                                ->get();
 
         $categories = Category::userCategories(Auth::id())->get();
+        $types = Type::all();
 
-        $freeMoney = FreeMoney::where('user_id', Auth::id())->first();
+        $freeMoney = $this->getFreeMoney(Auth::id());
+        dump($freeMoney);
 
-        if(!$freeMoney)
-        {
-            $freeMoney = 0;
-        }
-        else
-        {
-            $freeMoney = $freeMoney->amount;
-        }
-
-        return view('operations.index', compact('opertaions', 'categories', 'freeMoney'));
+        return view('operations.index', compact('opertaions', 'categories', 'freeMoney', 'types'));
     }
 
     /**
@@ -54,13 +49,18 @@ class OperationController extends Controller
      */
     public function store(Request $request) : RedirectResponse
     {
-        $o = Operation::create([
-            'user_id' => Auth::id(),
-            'category_id' => $request['category'],
-            'type_id' => Category::find($request['category'])->type_id,
-            'amount' => $request['summ'],
-            'comment' => $request['comment'],
-        ]);
+
+        $type = $request['type'];
+        $freeMoney = $this->getFreeMoney(Auth::id());
+        if($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
+        {
+            if($freeMoney < $request['summ'])
+            {
+                return redirect(route('index'));
+            }
+        }
+
+        $o = Operation::register(Auth::id(), $request['category'], $type, $request['summ'], $request['comment']);
 
         FreeMoneyAction::updateAmount($o);
 
@@ -97,5 +97,15 @@ class OperationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    protected function getFreeMoney(int $user_id) : float
+    {
+        $freeMoney = FreeMoney::where('user_id', $user_id)->first();
+        if(!$freeMoney)
+        {
+            return 0;
+        }
+        return $freeMoney->amount;
     }
 }

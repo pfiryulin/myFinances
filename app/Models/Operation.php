@@ -4,16 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 /**
- * @property int    $user_id
- * @property int    $category_id
- * @property int    $type_id
- * @property float  $summ
- * @property string $comment
- * @property \App\Models\User $user
+ * @property int                  $user_id
+ * @property int                  $category_id
+ * @property int                  $type_id
+ * @property float                $summ
+ * @property string               $comment
+ * @property \App\Models\User     $user
  * @property \App\Models\Category $category
- * @property \App\Models\Type $type
+ * @property \App\Models\Type     $type
  */
 class Operation extends Model
 {
@@ -55,5 +56,23 @@ class Operation extends Model
     public function type() : BelongsTo
     {
         return $this->belongsTo(Type::class, 'type_id', 'id');
+    }
+
+    public static function register(
+        int $userId,
+        int $categoryId,
+        int $typeId,
+        float $amount,
+        string $comment
+    ) : self {
+        return static::create(
+            [
+                'user_id'     => $userId,
+                'category_id' => $categoryId,
+                'type_id'     => $typeId,
+                'amount'      => $amount,
+                'comment'     => $comment,
+            ]
+        );
     }
 }
