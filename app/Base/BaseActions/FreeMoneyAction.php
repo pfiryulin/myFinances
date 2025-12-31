@@ -13,6 +13,13 @@ class FreeMoneyAction
     //todo перенести сюда проверку сумы свободных средств при расходных операциях, в том числе при создании и
     // пополнении  депозита
 
+    /**
+     * update the record in the table free_money
+     *
+     * @param \App\Models\Operation $operation
+     *
+     * @return void
+     */
     public static function updateAmount(Operation $operation)
     {
         $freeMoneyItem = FreeMoney::where('user_id', $operation->user_id)->first();
@@ -38,6 +45,23 @@ class FreeMoneyAction
                     }
                 break;
         }
+    }
+
+    /**
+     * get the available funds amount
+     *
+     * @param int $user_id
+     *
+     * @return float
+     */
+    public static function getFreeMoney(int $user_id) : float
+    {
+        $freeMoney = FreeMoney::where('user_id', $user_id)->first();
+        if(!$freeMoney)
+        {
+            return 0;
+        }
+        return $freeMoney->amount;
     }
 
     private static function plussFreeMoney(FreeMoney|null $freeMoney, Operation $operation) : void

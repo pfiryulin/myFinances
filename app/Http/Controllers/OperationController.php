@@ -30,7 +30,7 @@ class OperationController extends Controller
         $categories = Category::userCategories(Auth::id())->get();
         $types = Type::all();
 
-        $freeMoney = $this->getFreeMoney(Auth::id());
+        $freeMoney = FreeMoneyAction::getFreeMoney(Auth::id());
         dump($freeMoney);
 
         return view('operations.index', compact('opertaions', 'categories', 'freeMoney', 'types'));
@@ -51,7 +51,7 @@ class OperationController extends Controller
     {
 
         $type = $request['type'];
-        $freeMoney = $this->getFreeMoney(Auth::id());
+        $freeMoney = FreeMoneyAction::getFreeMoney(Auth::id());
         if($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
         {
             if($freeMoney < $request['summ'])
@@ -99,13 +99,5 @@ class OperationController extends Controller
         //
     }
 
-    protected function getFreeMoney(int $user_id) : float
-    {
-        $freeMoney = FreeMoney::where('user_id', $user_id)->first();
-        if(!$freeMoney)
-        {
-            return 0;
-        }
-        return $freeMoney->amount;
-    }
+
 }
