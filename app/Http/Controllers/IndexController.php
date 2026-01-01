@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Base\BaseActions\FreeMoneyAction;
 use App\Models\Deposit;
+use http\Client\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Laravel\Sanctum\NewAccessToken;
 
 class IndexController extends Controller
 {
@@ -29,9 +32,18 @@ class IndexController extends Controller
 
     }
 
-    public function login() : View
+    public function login(Request $request)
     {
-        return view('login');
+        dd($request);
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
+            ]);
+        }
+
+        $token = Auth::user()->createToken('spa-token')->plainTextToken;
+
+        return response()->json(['token' => $token]);
     }
 
     public function logout(Request $request) : RedirectResponse
@@ -41,7 +53,7 @@ class IndexController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json(['message' => 'Successfully logged out']);
 
     }
 

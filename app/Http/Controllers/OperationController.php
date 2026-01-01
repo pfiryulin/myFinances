@@ -20,6 +20,8 @@ class OperationController extends Controller
      */
     public function index(Request $request) : array
     {
+        dd($request->host(), $request->httpHost(), $request->schemeAndHttpHost(), $request->ip());
+
         $opertaions = Operation::where('user_id', $request['userId'])
                                ->with([
                                    'category',
