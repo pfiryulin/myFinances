@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Base\BaseActions\FreeMoneyAction;
+use App\Models\Deposit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,11 +11,22 @@ use Illuminate\View\View;
 
 class IndexController extends Controller
 {
-    public function index() : View
+    public function index(Request $request) : array
     {
-        $user = Auth::user();
+        try
+        {
+            $freemoneys = FreeMoneyAction::getFreeMoney($request['userId']);
+            $deposites = Deposit::where('user_id', $request['userId'])->sum('amount');
+            return [
+                'freemoneys' => $freemoneys,
+                'deposites' => $deposites,
+            ];
+        }
+        catch (\Exception $e)
+        {
+            return $e->getMessage();
+        }
 
-        return view('index');
     }
 
     public function login() : View

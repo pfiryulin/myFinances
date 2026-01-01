@@ -20,31 +20,32 @@ class FreeMoneyAction
      *
      * @return void
      */
-    public static function updateAmount(Operation $operation)
+    public static function updateAmount(Operation $operation) : FreeMoney
     {
         $freeMoneyItem = FreeMoney::where('user_id', $operation->user_id)->first();
 
         switch ($operation->type_id)
         {
             case Type::INCOME:
-                static::plussFreeMoney($freeMoneyItem, $operation);
+                $freeMoneyItem = static::plussFreeMoney($freeMoneyItem, $operation);
                 break;
 
             case Type::EXPENDITURE:
-                static::minusFreeMoney($freeMoneyItem, $operation);
+                $freeMoneyItem = static::minusFreeMoney($freeMoneyItem, $operation);
                 break;
 
             case Type::DEPOSIT:
                     if($operation->category_id == Deposit::TO_DEPOSIT)
                     {
-                        static::minusFreeMoney($freeMoneyItem, $operation);
+                        $freeMoneyItem = static::minusFreeMoney($freeMoneyItem, $operation);
                     }
                     else
                     {
-                        static::plussFreeMoney($freeMoneyItem, $operation);
+                        $freeMoneyItem = static::plussFreeMoney($freeMoneyItem, $operation);
                     }
                 break;
         }
+        return $freeMoneyItem;
     }
 
     /**
@@ -64,11 +65,11 @@ class FreeMoneyAction
         return $freeMoney->amount;
     }
 
-    private static function plussFreeMoney(FreeMoney|null $freeMoney, Operation $operation) : void
+    private static function plussFreeMoney(FreeMoney|null $freeMoney, Operation $operation) : FreeMoney
     {
         if (!$freeMoney)
         {
-            FreeMoney::create([
+            $freeMoney = FreeMoney::create([
                 'user_id' => $operation->user_id,
                 'amount'  => $operation->amount,
             ]);
@@ -80,13 +81,17 @@ class FreeMoneyAction
                 'amount' => $summ,
             ]);
         }
+
+        return $freeMoney;
     }
 
-    private static function minusFreeMoney(FreeMoney $freeMoney, Operation $operation) : void
+    private static function minusFreeMoney(FreeMoney $freeMoney, Operation $operation) : FreeMoney
     {
         $res = $freeMoney->amount - $operation->amount;
         $freeMoney->update([
             'amount' => $res,
         ]);
+
+        return $freeMoney;
     }
 }

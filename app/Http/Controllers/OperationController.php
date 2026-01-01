@@ -18,22 +18,28 @@ class OperationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() : View
+    public function index(Request $request) : array
     {
-        $opertaions = Operation::where('user_id', Auth::id())
+        $opertaions = Operation::where('user_id', $request['userId'])
                                ->with([
                                    'category',
                                    'type',
                                ])
                                ->get();
 
-        $categories = Category::userCategories(Auth::id())->get();
+        $categories = Category::userCategories($request['userId'])->get()->groupBy('type_id');
+
         $types = Type::all();
 
-        $freeMoney = FreeMoneyAction::getFreeMoney(Auth::id());
-        dump($freeMoney);
+        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
 
-        return view('operations.index', compact('opertaions', 'categories', 'freeMoney', 'types'));
+        return [
+            'opertaions' => $opertaions,
+            'categories' => $categories,
+            'types' => $types,
+            'freeMoney' => $freeMoney,
+        ];
+
     }
 
     /**
@@ -47,11 +53,11 @@ class OperationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) : RedirectResponse
+    public function store(Request $request) : FreeMoney
     {
 
         $type = $request['type'];
-        $freeMoney = FreeMoneyAction::getFreeMoney(Auth::id());
+        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
         if($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
         {
             if($freeMoney < $request['summ'])
@@ -60,11 +66,11 @@ class OperationController extends Controller
             }
         }
 
-        $o = Operation::register(Auth::id(), $request['category'], $type, $request['summ'], $request['comment']);
+        $o = Operation::register($request['userId'], $request['category'], $type, $request['summ'], $request['comment']);
 
-        FreeMoneyAction::updateAmount($o);
+        ;
 
-        return redirect(route('operation'));
+        return FreeMoneyAction::updateAmount($o);
     }
 
     /**

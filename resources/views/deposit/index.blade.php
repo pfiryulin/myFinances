@@ -15,7 +15,7 @@
                     <td>{{ $deposit->name }}</td>
                     <td>{{ $deposit->amount }}</td>
                     <td>{{ $deposit->comment ?? $deposit->comment }}</td>
-                    <td>{{ $deposit->id }}</td>
+                    <td>Внести проценты Редактировать</td>
                 </tr>
             @empty
                 Нет депозитов

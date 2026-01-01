@@ -1,6 +1,10 @@
 @extends('app')
 @section('content')
-    <h3>здесь должен быть даш борд</h3>
+    <b>Свободные деньги: </b>{{ $freemoneys }} ₽
+    <br>
+    <b>Всего на депозитах: </b>{{ $deposites }} ₽
+    <br>
+    <b>Общий баланс: </b>{{ $deposites + $freemoneys }} ₽
 @endsection
 
 
