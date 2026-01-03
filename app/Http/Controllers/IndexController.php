@@ -34,7 +34,7 @@ class IndexController extends Controller
 
     public function login(Request $request)
     {
-        dd($request);
+//        dd($request);
         if (!Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
@@ -42,7 +42,7 @@ class IndexController extends Controller
         }
 
         $token = Auth::user()->createToken('spa-token')->plainTextToken;
-
+dd($token);
         return response()->json(['token' => $token]);
     }
 

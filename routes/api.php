@@ -5,8 +5,22 @@ use \App\Http\Controllers\OperationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/user/', [IndexController::class, 'login'])->middleware('auth:sanctum');
-Route::get('/test/', function (){return 'TEST';})->name('apiTest');
+
+Route::post('/login', function (\Illuminate\Http\Request $request) {
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        abort(401, 'Invalid credentials');
+    }
+
+    $token = Auth::user()->createToken('auth-token')->plainTextToken;
+    return response()->json(['token' => $token]);
+});
+
+Route::post('/user', function ()
+{
+    return auth()->user();
+})->middleware('auth:sanctum');
+
+//Route::get('/test/', function () { return 'TEST'; })->name('apiTest');
 
 Route::post('/index/', [IndexController::class, 'index'])->name('apiIndex');
 

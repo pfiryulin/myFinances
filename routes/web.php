@@ -26,3 +26,4 @@ Route::post('/operation/', [OperationController::class, 'store'])->name('operati
 Route::get('/deposite/', [DepositController::class, 'index'])->name('deposit');
 Route::post('/deposite/update/', [DepositController::class, 'edit'])->name('deposit-update');
 Route::post('/deposite/create/', [DepositController::class, 'store'])->name('deposit-create');
+Route::get('/test/wer/', function(){ return view('test'); });
