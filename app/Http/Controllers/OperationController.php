@@ -20,20 +20,19 @@ class OperationController extends Controller
      */
     public function index(Request $request) : array
     {
-        dd($request->host(), $request->httpHost(), $request->schemeAndHttpHost(), $request->ip());
-
-        $opertaions = Operation::where('user_id', $request['userId'])
+//        dump(auth()->user()->id);
+        $opertaions = Operation::where('user_id', auth()->user()->id)
                                ->with([
                                    'category',
                                    'type',
                                ])
                                ->get();
 
-        $categories = Category::userCategories($request['userId'])->get()->groupBy('type_id');
+        $categories = Category::userCategories(auth()->user()->id)->get()->groupBy('type_id');
 
         $types = Type::all();
 
-        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
+        $freeMoney = FreeMoneyAction::getFreeMoney(auth()->user()->id);
 
         return [
             'opertaions' => $opertaions,
