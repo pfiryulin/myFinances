@@ -35,7 +35,7 @@ class OperationController extends Controller
         $freeMoney = FreeMoneyAction::getFreeMoney(auth()->user()->id);
 
         return [
-            'opertaions' => $opertaions,
+            'operations' => $opertaions,
             'categories' => $categories,
             'types' => $types,
             'freeMoney' => $freeMoney,

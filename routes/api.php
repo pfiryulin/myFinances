@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::post('/login', function (\Illuminate\Http\Request $request) {
-//    dd($request);
+Route::post('/login', function (Request $request) {
     if (!Auth::attempt($request->only('email', 'password'))) {
         abort(401, 'Invalid credentials');
     }
