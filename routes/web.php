@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use \Illuminate\Http\Request;
 use \App\Http\Controllers\DepositController;
 
-Route::get('/', [IndexController::class, 'index'])->middleware('auth')->name('index');
+Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::get('/registration', function () {
     return view('register');
 }

@@ -14,36 +14,23 @@ use Laravel\Sanctum\NewAccessToken;
 
 class IndexController extends Controller
 {
-    public function index(Request $request) : array
+    public function index(Request $request) : View
     {
-        try
-        {
-            $freemoneys = FreeMoneyAction::getFreeMoney($request['userId']);
-            $deposites = Deposit::where('user_id', $request['userId'])->sum('amount');
-            return [
-                'freemoneys' => $freemoneys,
-                'deposites' => $deposites,
-            ];
-        }
-        catch (\Exception $e)
-        {
-            return $e->getMessage();
-        }
-
+        return view('index');
     }
 
-    public function login(Request $request)
+    public function login() : View
     {
 //        dd($request);
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        $token = Auth::user()->createToken('spa-token')->plainTextToken;
-dd($token);
-        return response()->json(['token' => $token]);
+//        if (!Auth::attempt($request->only('email', 'password'))) {
+//            throw ValidationException::withMessages([
+//                'email' => __('auth.failed'),
+//            ]);
+//        }
+//
+//        $token = Auth::user()->createToken('spa-token')->plainTextToken;
+//        return response()->json(['token' => $token]);
+        return view('login');
     }
 
     public function logout(Request $request) : RedirectResponse

@@ -1,11 +1,75 @@
-@import 'tailwindcss';
+/*@import 'tailwindcss';*/
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/*@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views!*.blade.php';*/
+/*@source '../../storage/framework/views!*.php';*/
+/*@source '..!**!*.blade.php';*/
+/*@source '..!**!*.js';*/
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/*@theme {*/
+/*    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',*/
+/*        'Segoe UI Symbol', 'Noto Color Emoji';*/
+/*}*/
+
+*{
+    font-family: "Arial";
+}
+
+#app{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+}
+select{
+    width: 200px;
+    height: 25px;
+    margin-right: 10px;
+}
+input{
+    width: 192px;
+    margin-right: 10px;
+}
+
+header{
+    display: flex;
+    background: blue;
+    align-items: center;
+    padding: 0 10px;
+}
+footer{
+    background: blue;
+}
+
+.menu-items{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px
+}
+
+.menu-item{
+    list-style: none;
+}
+header, footer, .menu-item a{
+    color: aliceblue;
+}
+
+.footer__items{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 0 10px;
+}
+
+.container{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.form{
+    width: 50%;
+    max-width: 500px;
+}
+.form__item{
+    display: flex;
+    justify-content: space-between;
 }
