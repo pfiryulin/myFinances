@@ -58,7 +58,23 @@ async function getOperation()
     <Header />
     <div class="container">
         <div v-if="!authToken" class="login form">
-
+            <form action="">
+                <div class="form__items">
+                    <div class="form__item">
+                        <input type="text" name="login" id="" placeholder="Логин">
+                    </div>
+                    <div class="form__item">
+                        <input type="password" name="password" id="" placeholder="Пароль">
+                    </div>
+                    <div class="form__item">
+                        <input class="form__submit" type="submit" value="Войти">
+                    </div>
+                </div>
+                <div class="form__links">
+                    <a href="">Регистрация</a>
+                    <a href="">Забыли пароль?</a>
+                </div>
+            </form>
 
         </div>
         <div v-else>{{ authToken }}</div>
