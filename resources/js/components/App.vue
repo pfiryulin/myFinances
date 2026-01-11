@@ -1,7 +1,7 @@
 <script setup>
 import {computed, ref, reactive} from 'vue';
 import Cookies from 'js-cookie';
-const a = ref('HELLO WORLD');
+import LoginForm from "./forms/LoginForm.vue";
 
 const userToken = ref(null);
 const types = ref(null);
@@ -58,24 +58,7 @@ async function getOperation()
     <Header />
     <div class="container">
         <div v-if="!authToken" class="login form">
-            <form action="">
-                <div class="form__items">
-                    <div class="form__item">
-                        <input type="text" name="login" id="" placeholder="Логин">
-                    </div>
-                    <div class="form__item">
-                        <input type="password" name="password" id="" placeholder="Пароль">
-                    </div>
-                    <div class="form__item">
-                        <input class="form__submit" type="submit" value="Войти">
-                    </div>
-                </div>
-                <div class="form__links">
-                    <a href="">Регистрация</a>
-                    <a href="">Забыли пароль?</a>
-                </div>
-            </form>
-
+            <LoginForm />
         </div>
         <div v-else>{{ authToken }}</div>
 <!--        <div>-->
