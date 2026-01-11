@@ -6,6 +6,10 @@ const a = ref('HELLO WORLD');
 const userToken = ref(null);
 const types = ref(null);
 const categories = ref(null);
+const operations = ref(null);
+const authToken = ref(Cookies.get('authToken'));
+
+console.log(authToken);
 
 
 async function getToken()
@@ -20,12 +24,12 @@ async function getToken()
     });
     userToken.value = await res.json();
     console.log(userToken.value.token)
+    let inFifteenMinutes = new Date(new Date().getTime() + 5 * 60 * 1000);
     await Cookies.set('authToken', userToken.value.token, {expires: 2});
 }
 
 async function getOperation()
 {
-    let authToken = Cookies.get('authToken');
     if (authToken)
     {
         const operationRes = await fetch('https://myfinances.test/api/operations/',
@@ -53,17 +57,26 @@ async function getOperation()
 <template>
     <Header />
     <div class="container">
-        <div>
-            <button @click="getToken">Get Token</button>
+        <div v-if="!authToken" class="login form">
+
+
         </div>
-        <div>
-            <button @click="getOperation">Get Operation</button>
-        </div>
+        <div v-else>{{ authToken }}</div>
+<!--        <div>-->
+<!--            <button @click="getToken">Get Token</button>-->
+<!--        </div>-->
+<!--        <div>-->
+<!--            <button @click="getOperation">Get Operation</button>-->
+<!--        </div>-->
     </div>
-    {{ a }}
-    <br>
-    {{ types }}
-    {{ categories }}
+<!--    {{ a }}-->
+<!--    <br>-->
+<!--    <pre>{{ types }}</pre>-->
+<!--    <br>-->
+<!--    <hr>-->
+<!--    <i class="fa-solid fa-user"></i>-->
+
+<!--    <pre>{{ categories }}</pre>-->
     <Footer />
 </template>
 
