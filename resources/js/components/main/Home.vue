@@ -1,11 +1,16 @@
 <script setup>
 import {computed, ref, reactive, onMounted} from 'vue';
-const operationSummaryList = ref(null);
+const operationSummaryList = ref({
+    operations: [],
+    months: []
+});
 const props = defineProps(
     {
         authToken: String
     }
 );
+
+const isLoaded = ref(false);
 
 onMounted(getOperation());
 
@@ -22,8 +27,10 @@ async function getOperation(){
             }
         )
         operationSummaryList.value = await (request.json());
-        console.log(operationSummaryList.value.mounth);
+        console.log(operationSummaryList.value.months);
         console.log(operationSummaryList.value.operations);
+        console.log(operationSummaryList.value.table);
+        isLoaded.value = true;
     }
     catch (error){
         console.log(error);
@@ -34,15 +41,28 @@ async function getOperation(){
 
 <template>
     <h1 class="title is-3">Сводная страница</h1>
-<!--    <div class="table-container">-->
-<!--        <table class="tabel">-->
+<!--    <pre>{{operationSummaryList}}</pre>-->
+
+
+
+    <div v-if="isLoaded" class="table-container">
+<!--        <table class="table is-bordered">-->
 <!--            <tr>-->
-<!--                <th v-for="mounth in operationSummaryList.mounth">-->
+<!--                <th>Категория</th>-->
+<!--                <th v-for="mounth in operationSummaryList.months">-->
 <!--                    {{ mounth }}-->
 <!--                </th>-->
+<!--                <th>Итого</th>-->
+<!--            </tr>-->
+<!--            <tr v-for="row in operationSummaryList.table">-->
+<!--                <td>{{ row.category }}</td>-->
+<!--                <td v-for="mounth in operationSummaryList.months">-->
+<!--                    {{ row.amounts[mounth] }}-->
+<!--                </td>-->
 <!--            </tr>-->
 <!--        </table>-->
-<!--    </div>-->
+    </div>
+    <div v-else>Loaded...</div>
 
 </template>
 
