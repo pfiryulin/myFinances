@@ -46,4 +46,9 @@ class HomeController extends Controller
         });
         return ['operations' => $operations, 'months' => $months, 'table' => $table];
     }
+
+    protected function separeteForTyprs()
+    {
+        dd(123);
+    }
 }
