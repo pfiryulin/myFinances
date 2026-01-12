@@ -2,17 +2,20 @@
     import {computed, ref, reactive} from 'vue';
     import Cookies from 'js-cookie';
 
+    const emit = defineEmits(['update-token']);
+
     const login = ref('');
     const password = ref('');
     const error = ref(null);
     const userToken = ref(null);
 
 
+
     async function handleSubmitLogin(){
         let userData = {
             email: login.value, password: password.value
         }
-        const res = await fetch('https://myfinances.test/api/login/', {
+        const res = await fetch('/api/login/', {
             method: 'post', headers: {
                 'Content-Type': 'aplication/json', 'Accept': 'aplication/json'
             }, body: JSON.stringify(userData)
@@ -20,6 +23,7 @@
         userToken.value = await res.json();
         console.log(userToken.value.token)
         await Cookies.set('authToken', userToken.value.token, {expires: 2});
+        emit('update-token');
     }
 </script>
 

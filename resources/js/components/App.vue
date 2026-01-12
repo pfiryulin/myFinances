@@ -24,7 +24,6 @@ async function getToken()
     });
     userToken.value = await res.json();
     console.log(userToken.value.token)
-    let inFifteenMinutes = new Date(new Date().getTime() + 5 * 60 * 1000);
     await Cookies.set('authToken', userToken.value.token, {expires: 2});
 }
 
@@ -52,13 +51,19 @@ async function getOperation()
         console.log('Auth token not exist');
     }
 }
+
+function updateToken(){
+    authToken.value = Cookies.get('authToken');
+}
 </script>
 
 <template>
     <Header />
     <div class="container">
         <div v-if="!authToken" class="login form">
-            <LoginForm />
+            <LoginForm
+                @update-token="updateToken"
+            />
         </div>
         <div v-else>{{ authToken }}</div>
 <!--        <div>-->

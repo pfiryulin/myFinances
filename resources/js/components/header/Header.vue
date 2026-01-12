@@ -6,7 +6,7 @@
 
 <template>
   <header>
-    <div class="header-logo">LOGOTIP</div>
+    <div class="header-logo">myFinances</div>
     <div class="header-menu">
       <ul class="menu-items">
         <li class="menu-item">
