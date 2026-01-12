@@ -119,3 +119,8 @@ input.form__submit{
 .form__links a{
     color: var(--color-contrast);
 }
+
+.operation__table td, .operation__table th{
+    border: 1px solid var(--color-contrast);
+    padding: 2px 4px;
+}
