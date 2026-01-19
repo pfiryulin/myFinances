@@ -24,5 +24,11 @@ Route::get('/user', function ()
 
 Route::post('/index/', [IndexController::class, 'index'])->name('apiIndex')->middleware('auth:sanctum');
 
-Route::post('/operations/', [OperationController::class, 'index'])->name('operation')->middleware('auth:sanctum');
-Route::post('/operations/create/', [OperationController::class, 'store'])->name('operation');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('operations', [OperationController::class, 'index']);
+    Route::post('operations', [OperationController::class, 'store']);
+    Route::get('operations/{id}', [OperationController::class, 'show']);
+    Route::put('operations/{id}', [OperationController::class, 'update']);
+    Route::delete('operations/{id}', [OperationController::class, 'destroy']);
+});
+
