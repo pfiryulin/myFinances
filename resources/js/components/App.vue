@@ -6,7 +6,7 @@ import Operation from "./main/Operation.vue";
 import Home from "./main/Home.vue";
 
 const authToken = ref(Cookies.get('authToken'));
-const currentTab = ref('Home');
+const currentTab = ref('Operation');
 const tabs = ref({ Operation, Home });
 
 function updateToken()
