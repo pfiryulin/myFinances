@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Base\BaseActions\FreeMoneyAction;
+use App\Http\Requests\StoreOperationRequest;
 use App\Http\Resources\OperationResource;
-use App\Models\Category;
-use App\Models\Deposit;
-use App\Models\FreeMoney;
 use App\Models\Operation;
-use App\Models\Type;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class OperationController extends Controller
 {
@@ -30,7 +24,7 @@ class OperationController extends Controller
 
         if($operations->isEmpty())
         {
-            return response(['message' => 'Operation not found',], 404);
+            return response(['message' => 'Operations not found',], 404);
         }
 
         return OperationResource::collection($operations);
@@ -47,27 +41,39 @@ class OperationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) : FreeMoney
+    public function store(StoreOperationRequest $request) : array
     {
-        $type = $request['type'];
-        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
-        if ($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
-        {
-            if ($freeMoney < $request['summ'])
-            {
-                return redirect(route('index'));
-            }
-        }
+        //todo
+        // 2. создать операцию
+        // 3. обновить баланс
+        // 4. обновить свободные деньги
+        // 5. вернуть операцию, свободные деньги и боанс
 
-        $o = Operation::register(
-            $request['userId'],
-            $request['category'],
-            $type,
-            $request['summ'],
-            $request['comment']
-        );;
 
-        return FreeMoneyAction::updateAmount($o);
+        dump(Auth::user()->id);
+        dump(auth()->user()->id);
+        dump($request);
+
+//        $type = $request['type'];
+//        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
+//        if ($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
+//        {
+//            if ($freeMoney < $request['summ'])
+//            {
+//                return redirect(route('index'));
+//            }
+//        }
+//
+//        $o = Operation::register(
+//            $request['userId'],
+//            $request['category'],
+//            $type,
+//            $request['summ'],
+//            $request['comment']
+//        );;
+//
+//        return FreeMoneyAction::updateAmount($o);
+        return [];
     }
 
     /**
