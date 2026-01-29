@@ -24,7 +24,6 @@ class OperationService
         if(isset($result['operation']))
         {
             $result['freeMoney'] = FreeMoneyServices::updateFreeMoney($result['operation']);
-
         }
 
 
