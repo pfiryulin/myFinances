@@ -20,31 +20,45 @@ class FreeMoneyServices
      *
      * @return void
      */
-    public static function updateAmount(Operation $operation) : FreeMoney
+    public static function updateFreeMoney(Operation $operation) : FreeMoney
     {
-        $freeMoneyItem = FreeMoney::where('user_id', $operation->user_id)->first();
+        $freeMoneyItem = static::getFreeMoney($operation->user_id);
+
+        if($operation->amount > $freeMoneyItem->amount)
+        {
+            return [
+                'error' => 'Сумма операции не может быть больше суммы свободных средств',
+            ];
+        }
+
+        $oldData = $freeMoneyItem->updated_at;
+        $oldAmount = $freeMoneyItem->amount;
+        $newAmount = 0;
 
         switch ($operation->type_id)
         {
             case Type::INCOME:
-                $freeMoneyItem = static::plussFreeMoney($freeMoneyItem, $operation);
+                $newAmount = $freeMoneyItem->amount + $operation->amount;
                 break;
 
             case Type::EXPENDITURE:
-                $freeMoneyItem = static::minusFreeMoney($freeMoneyItem, $operation);
+                $newAmount = $freeMoneyItem->amount - $operation->amount;
                 break;
 
             case Type::DEPOSIT:
-                if($operation->category_id == Deposit::TO_DEPOSIT)
+                if ($operation->category_id == Deposit::TO_DEPOSIT)
                 {
-                    $freeMoneyItem = static::minusFreeMoney($freeMoneyItem, $operation);
+                    $newAmount = $freeMoneyItem->amount - $operation->amount;
                 }
                 else
                 {
-                    $freeMoneyItem = static::plussFreeMoney($freeMoneyItem, $operation);
+                    $newAmount = $freeMoneyItem->amount + $operation->amount;
                 }
                 break;
         }
+
+        $freeMoneyItem->update(['amount' => $newAmount]);
+
         return $freeMoneyItem;
     }
 
@@ -55,43 +69,11 @@ class FreeMoneyServices
      *
      * @return float
      */
-    public static function getFreeMoney(int $user_id) : float
+    public static function getFreeMoney(int $user_id) : FreeMoney
     {
-        $freeMoney = FreeMoney::where('user_id', $user_id)->first();
-        if(!$freeMoney)
-        {
-            return 0;
-        }
-        return $freeMoney->amount;
-    }
-
-    private static function plussFreeMoney(FreeMoney|null $freeMoney, Operation $operation) : FreeMoney
-    {
-        if (!$freeMoney)
-        {
-            $freeMoney = FreeMoney::create([
-                'user_id' => $operation->user_id,
-                'amount'  => $operation->amount,
-            ]);
-        }
-        else
-        {
-            $summ = $operation->amount + $freeMoney->amount;
-            $freeMoney->update([
-                'amount' => $summ,
-            ]);
-        }
+        $freeMoney = FreeMoney::firstOrCreate(['user_id' => $user_id]);;
 
         return $freeMoney;
     }
 
-    private static function minusFreeMoney(FreeMoney $freeMoney, Operation $operation) : FreeMoney
-    {
-        $res = $freeMoney->amount - $operation->amount;
-        $freeMoney->update([
-            'amount' => $res,
-        ]);
-
-        return $freeMoney;
-    }
 }

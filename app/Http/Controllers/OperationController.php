@@ -6,7 +6,7 @@ use App\Actions\OperationCreateAction;
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Resources\OperationResource;
 use App\Models\Operation;
-use App\Services\Operations\OperationServices;
+use App\Services\Operations\OperationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -46,42 +46,14 @@ class OperationController extends Controller
     public function store(StoreOperationRequest $request) : array
     {
 
+        $fields = $request->all();
+        $fields['userId'] = auth()->user()->id;
 
-        $operation = OperationServices::storeOperationHandler(
-            auth()->user()->id,
-            $request->categoryId,
-            $request->typeId,
-            $request->summ,
-            ($request->comment) ?? null
-        );
-
-
-
-
-        dump(Auth::user()->id);
-        dump(auth()->user()->id);
-        dump($request);
-
-//        $type = $request['type'];
-//        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
-//        if ($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
-//        {
-//            if ($freeMoney < $request['summ'])
-//            {
-//                return redirect(route('index'));
-//            }
-//        }
-//
-//        $o = Operation::register(
-//            $request['userId'],
-//            $request['category'],
-//            $type,
-//            $request['summ'],
-//            $request['comment']
-//        );;
-//
-//        return FreeMoneyAction::updateAmount($o);
-        return [];
+        $arrResult = OperationService::storeOperationHandler($fields);
+        //todo дописать проверку на наличие ошибки в массиве. Если есть вернуть ошибку с Bad request.
+        //todo дописать возвращение массива ресурсов
+//        dump($arrResult);
+        return $arrResult;
     }
 
     /**
