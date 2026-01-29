@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\OperationCreateAction;
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Resources\OperationResource;
 use App\Models\Operation;
+use App\Services\Operations\OperationServices;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -43,11 +45,17 @@ class OperationController extends Controller
      */
     public function store(StoreOperationRequest $request) : array
     {
-        //todo
-        // 2. создать операцию
-        // 3. обновить баланс
-        // 4. обновить свободные деньги
-        // 5. вернуть операцию, свободные деньги и боанс
+
+
+        $operation = OperationServices::storeOperationHandler(
+            auth()->user()->id,
+            $request->categoryId,
+            $request->typeId,
+            $request->summ,
+            ($request->comment) ?? null
+        );
+
+
 
 
         dump(Auth::user()->id);

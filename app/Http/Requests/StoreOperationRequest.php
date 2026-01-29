@@ -15,6 +15,7 @@ class StoreOperationRequest extends FormRequest
     {
         return [
             'category' => ['required', 'exists:categories,id'],
+            'type' => ['required', 'exists:types,id'],
             'summ' => ['required', 'numeric', 'min:0,01', 'max:10000000'],
             'comment' => ['nullable', 'string', 'max:1000'],
         ];

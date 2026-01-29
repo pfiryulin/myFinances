@@ -26,6 +26,7 @@ class Operation extends Model
         'type_id',
         'amount',
         'comment',
+        'type',
     ];
 
     /**
@@ -65,6 +66,8 @@ class Operation extends Model
         float $amount,
         string $comment
     ) : self {
+
+        //todo Подумать как замапить эту хрень
         return static::create(
             [
                 'user_id'     => $userId,
