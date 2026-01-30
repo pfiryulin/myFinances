@@ -3,6 +3,7 @@
 namespace App\Services\FreeMoney;
 
 use App\Actions\FreeMoneyCalculateAction;
+use App\Actions\FreeMoneyGetAction;
 use App\Models\Deposit;
 use App\Models\FreeMoney;
 use App\Models\FreeMoneyHistory;
@@ -21,15 +22,7 @@ class FreeMoneyServices
      */
     public static function updateFreeMoney(Operation $operation) : FreeMoney|array
     {
-        $freeMoneyItem = static::getFreeMoney($operation->user_id);
-
-        if ($operation->amount > $freeMoneyItem->amount)
-        {
-            return [
-                'error' => 'Сумма операции не может быть больше суммы свободных средств',
-                'code'  => 400,
-            ];
-        }
+        $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);
 
         $oldData = $freeMoneyItem->updated_at;
         $oldAmount = $freeMoneyItem->amount;
@@ -41,22 +34,11 @@ class FreeMoneyServices
         );
 
         $freeMoneyItem->update(['amount' => $newAmount]);
+
         FreeMoneyHistory::register($operation->user_id, $freeMoneyItem->id, $oldAmount, $oldData);
 
         return $freeMoneyItem;
     }
 
-    /**
-     * get the available funds amount
-     *
-     * @param int $user_id
-     *
-     * @return float
-     */
-    public static function getFreeMoney(int $user_id) : FreeMoney
-    {
-        $freeMoney = FreeMoney::firstOrCreate(['user_id' => $user_id]);;
 
-        return $freeMoney;
-    }
 }

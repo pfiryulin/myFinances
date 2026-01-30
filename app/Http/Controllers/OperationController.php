@@ -6,7 +6,7 @@ use App\Actions\OperationCreateAction;
 use App\Http\Requests\StoreOperationRequest;
 use App\Http\Resources\OperationResource;
 use App\Models\Operation;
-use App\Services\Operations\OperationService;
+use App\Services\Operations\OperationCreateService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -49,10 +49,9 @@ class OperationController extends Controller
         $fields = $request->all();
         $fields['userId'] = auth()->user()->id;
 
-        $arrResult = OperationService::storeOperationHandler($fields);
+        $arrResult = OperationCreateService::storeOperationHandler($fields);
         //todo дописать проверку на наличие ошибки в массиве. Если есть вернуть ошибку с Bad request.
         //todo дописать возвращение массива ресурсов
-//        dump($arrResult);
         return $arrResult;
     }
 
