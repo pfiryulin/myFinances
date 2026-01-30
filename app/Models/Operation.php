@@ -67,7 +67,6 @@ class Operation extends Model
 
     public static function register(array $fields) : self
     {
-        //todo Подумать как замапить эту хрень
         return static::create(
             [
                 'user_id'     => $fields[self::$map['user_id']],
