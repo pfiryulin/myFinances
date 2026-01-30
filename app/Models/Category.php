@@ -24,6 +24,9 @@ class Category extends Model
         'user_id',
     ];
 
+    public const TO_DEPOSIT = 14;
+    public const FROM_DEPOSIT = 15;
+
     public function type() : HasOne
     {
         return $this->hasOne(Type::class, 'id', 'type_id');

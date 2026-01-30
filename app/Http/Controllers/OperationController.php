@@ -50,8 +50,7 @@ class OperationController extends Controller
         $fields['userId'] = auth()->user()->id;
 
         $arrResult = OperationCreateService::storeOperationHandler($fields);
-        //todo дописать проверку на наличие ошибки в массиве. Если есть вернуть ошибку с Bad request.
-        //todo дописать возвращение массива ресурсов
+
         return $arrResult;
     }
 
@@ -82,7 +81,9 @@ class OperationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //todo
+        // 1. Валилировать запрос на право обновления данных
+        // 2.
     }
 
     /**
@@ -90,6 +91,6 @@ class OperationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
     }
 }

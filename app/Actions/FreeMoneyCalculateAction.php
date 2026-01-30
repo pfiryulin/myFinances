@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use App\Models\Deposit;
+use App\Models\Category;
 use App\Models\Type;
 
 class FreeMoneyCalculateAction
@@ -36,7 +36,7 @@ class FreeMoneyCalculateAction
                 break;
 
             case Type::DEPOSIT:
-                if ($categoryId == Deposit::TO_DEPOSIT)
+                if ($categoryId == Category::TO_DEPOSIT)
                 {
                     $amount = $currentAmount - $operationAmount;
                 }

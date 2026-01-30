@@ -13,14 +13,12 @@ class OperationCreateService
 {
     public static function storeOperationHandler(array $operationFields) : array
     {
-        $result = [];
         $operation = null;
         $freeMoney = 0;
         $depositsAmount = 0;
         try
         {
             $operation = Operation::register($operationFields);
-
             $operation->load(['category', 'type']);
 
             if($operation)
@@ -28,6 +26,7 @@ class OperationCreateService
                 $freeMoney = FreeMoneyServices::updateFreeMoney($operation);
                 $depositsAmount = DepositsGetAmountAction::getDepositsAmount($operation->user_id);
             }
+
             return [
                 'operation' => new OperationResource($operation),
                 'freeMoney' => $freeMoney->amount,
@@ -38,13 +37,5 @@ class OperationCreateService
         {
             return ['error' => 'Some problems occurred, please try again.'];
         }
-
-
-        //todo
-        // 4. обновить баланс
-        //   4.1 расчитать баланс. Получить свободные деньги -> получить депозиты -> расчитать балан
-        // 5. вернуть операцию, свободные деньги и баланс
-
-
     }
 }

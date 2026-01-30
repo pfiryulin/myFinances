@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-//todo написать jobs для записи истории свободных серджств раз в сутки в полночь по МСК.
+//todo написать jobs для записи истории свободных сердств раз в сутки в полночь по МСК.
 // На будущее подумать как учитывать часовой пояс пользователя для этого.
 // Для jobs проверяеть налличие операций за прошедший день и вносить в историю, если такие были.
 class FreeMoneyHistory extends Model
@@ -16,10 +16,6 @@ class FreeMoneyHistory extends Model
         'amount',
         'date',
     ];
-//    protected $casts = [
-//        'amount' => 'float',
-//        'date'   => Carbon::class,
-//    ];
 
     public function user() : BelongsTo
     {
