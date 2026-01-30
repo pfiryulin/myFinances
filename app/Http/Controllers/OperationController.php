@@ -2,45 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Base\BaseActions\FreeMoneyAction;
-use App\Models\Category;
-use App\Models\Deposit;
-use App\Models\FreeMoney;
+use App\Actions\OperationCreateAction;
+use App\Http\Requests\StoreOperationRequest;
+use App\Http\Resources\OperationResource;
 use App\Models\Operation;
-use App\Models\Type;
-use Illuminate\Http\RedirectResponse;
+use App\Services\Operations\OperationCreateService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 class OperationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request) : array
+    public function index(Request $request) : AnonymousResourceCollection|Response
     {
-        $opertaions = Operation::where('user_id', auth()->user()->id)
-                               ->with([
-                                   'category',
-                                   'type',
-                               ])
-                               ->get()->toArray();
+        $operations = Operation::where('user_id', auth()->user()->id)->with([
+                'category',
+                'type',
+            ])->get();
 
-//        $categories = Category::userCategories(auth()->user()->id)->get()->groupBy('type_id');
-//
-//        $types = Type::all();
-//
-//        $freeMoney = FreeMoneyAction::getFreeMoney(auth()->user()->id);
+        if($operations->isEmpty())
+        {
+            return response(['message' => 'Operations not found',], 404);
+        }
 
-//        return [
-//            'operations' => $opertaions,
-//            'categories' => $categories,
-//            'types' => $types,
-//            'freeMoney' => $freeMoney,
-//        ];
-        return $opertaions;
-
+        return OperationResource::collection($operations);
     }
 
     /**
@@ -54,32 +43,30 @@ class OperationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) : FreeMoney
+    public function store(StoreOperationRequest $request) : array
     {
 
-        $type = $request['type'];
-        $freeMoney = FreeMoneyAction::getFreeMoney($request['userId']);
-        if($type == Type::EXPENDITURE || ($type == Type::DEPOSIT && $request['category'] == Deposit::TO_DEPOSIT))
-        {
-            if($freeMoney < $request['summ'])
-            {
-                return redirect(route('index'));
-            }
-        }
+        $fields = $request->all();
+        $fields['userId'] = auth()->user()->id;
 
-        $o = Operation::register($request['userId'], $request['category'], $type, $request['summ'], $request['comment']);
-
-        ;
-
-        return FreeMoneyAction::updateAmount($o);
+        $arrResult = OperationCreateService::storeOperationHandler($fields);
+        //todo дописать проверку на наличие ошибки в массиве. Если есть вернуть ошибку с Bad request.
+        //todo дописать возвращение массива ресурсов
+        return $arrResult;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id) : OperationResource|Response
     {
-        //
+        $operation = Operation::find($id);
+        if(!$operation)
+        {
+            return response(['message' => 'Operation not found',], 404);
+        }
+
+        return new OperationResource($operation);
     }
 
     /**
@@ -105,6 +92,4 @@ class OperationController extends Controller
     {
         //
     }
-
-
 }

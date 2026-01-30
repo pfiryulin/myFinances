@@ -27,6 +27,13 @@ class Operation extends Model
         'amount',
         'comment',
     ];
+    protected static array $map = [
+        'category_id' => 'category',
+        'type_id'     => 'type',
+        'amount'      => 'summ',
+        'comment'     => 'comment',
+        'user_id'     => 'userId',
+    ];
 
     /**
      * Получаем пользователя, который ввел операцию
@@ -58,20 +65,16 @@ class Operation extends Model
         return $this->belongsTo(Type::class, 'type_id', 'id');
     }
 
-    public static function register(
-        int $userId,
-        int $categoryId,
-        int $typeId,
-        float $amount,
-        string $comment
-    ) : self {
+    public static function register(array $fields) : self
+    {
+        //todo Подумать как замапить эту хрень
         return static::create(
             [
-                'user_id'     => $userId,
-                'category_id' => $categoryId,
-                'type_id'     => $typeId,
-                'amount'      => $amount,
-                'comment'     => $comment,
+                'user_id'     => $fields[self::$map['user_id']],
+                'category_id' => $fields[self::$map['category_id']],
+                'type_id'     => $fields[self::$map['type_id']],
+                'amount'      => $fields[self::$map['amount']],
+                'comment'     => ($fields[self::$map['comment']]) ?? null,
             ]
         );
     }
