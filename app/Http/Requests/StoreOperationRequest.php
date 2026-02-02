@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckAmount;
+use App\Rules\OperationCheckAmount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,9 +23,10 @@ class StoreOperationRequest extends FormRequest
                 'numeric',
                 'min:0,01',
                 'max:10000000',
-                new CheckAmount(Auth::user()->id, $this->type, $this->category),
+                new OperationCheckAmount(Auth::user()->id, $this->type, $this->category),
                 ],
             'comment' => ['nullable', 'string', 'max:1000'],
+            'deposit' => ['nullable', 'exists:deposits,id'],
         ];
     }
 }

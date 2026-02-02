@@ -2,12 +2,14 @@
 
 namespace App\Services\Operations;
 
+use App\Actions\Calculate\Calculate;
 use App\Actions\Deposits\depositsGetAmountAction;
-use App\Actions\OperationCreateAction;
-use App\Http\Resources\OperationResource;
+use App\Actions\Deposits\DepositsUpdateAmountAction;
+use App\Actions\FreeMoneys\FreeMoneyGetAction;
+use App\Actions\FreeMoneys\FreeMoneyUpdateAction;
+use App\Http\Resources\Operations\OperationResource;
+use App\Models\FreeMoneyHistory;
 use App\Models\Operation;
-use App\Services\Deposits\DepositsService;
-use App\Services\FreeMoney\FreeMoneyServices;
 
 class OperationCreateService
 {
@@ -19,18 +21,33 @@ class OperationCreateService
         try
         {
             $operation = Operation::register($operationFields);
-            $operation->load(['category', 'type']);
 
-            if($operation)
+            if ($operation)
             {
-                $freeMoney = FreeMoneyServices::updateFreeMoney($operation);
+                $operation->load(['category', 'type']);
+
+                if ($operation->deposit_id)
+                {
+                    DepositsUpdateAmountAction::updateAmountDeposit($operation);
+                }
+
+                $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);
+                $freeMoney = FreeMoneyUpdateAction::updateFreeMoney($operation, $freeMoneyItem);
+
+                FreeMoneyHistory::register(
+                    $operation->user_id,
+                    $freeMoneyItem->id,
+                    $freeMoneyItem->amount,
+                    $freeMoneyItem->updated_at
+                );
+
                 $depositsAmount = DepositsGetAmountAction::getDepositsAmount($operation->user_id);
             }
 
             return [
                 'operation' => new OperationResource($operation),
                 'freeMoney' => $freeMoney->amount,
-                'balance' =>  $freeMoney->amount + $depositsAmount,
+                'balance'   => Calculate::pluss($freeMoney->amount, $depositsAmount),
             ];
         }
         catch (\Exception $e)

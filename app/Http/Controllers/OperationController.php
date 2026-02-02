@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Actions\OperationCreateAction;
+use App\Actions\Operations\GetOperationAction;
 use App\Http\Requests\StoreOperationRequest;
-use App\Http\Resources\OperationResource;
+use App\Http\Resources\Operations\OperationResource;
 use App\Models\Operation;
 use App\Services\Operations\OperationCreateService;
+use App\Services\Operations\OperationDeleteService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class OperationController extends Controller
 {
@@ -57,9 +58,9 @@ class OperationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) : OperationResource|Response
+    public function show(int $id) : OperationResource|Response
     {
-        $operation = Operation::find($id);
+        $operation = GetOperationAction::getOperation($id);
         if(!$operation)
         {
             return response(['message' => 'Operation not found',], 404);
@@ -86,7 +87,7 @@ class OperationController extends Controller
         // 2. Валидировать данные для операции.
         // 3. Если меняется сумма произвести пересчет свободных средств в обратную сторону (вычесть суммы операции
         // или прибавить сумму операции)
-        //   3.1 СОхранить старую сумму
+        //   3.1 Сохранить старую сумму
         //   3.2. После успешного обновления записи пересчитать свободные средства
         // 4. Обновить свободные средства.
         // 5. Вернутьо операцию, свободные средства, обновленный баланс
@@ -95,13 +96,16 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id) : int |Response
     {
-        // todo
-        // 1. Валидировать права на даление. Проверить принадлежит ли операция данному пользователю.
-        // 2. Запомнить Сумму операции и её тип.
-        // 3. Удалить операцию.
-        // 4. Если операция удалена успешно, пересчитать свободные средства и баланс
-        // 6. Вернуть удаленную оперцию, свободные средства и баланс.
+
+        $operation = GetOperationAction::getOperation($id);
+
+        if(!$operation)
+        {
+            return response(['message' => 'Operation not found',], 404);
+        }
+
+        return OperationDeleteService::handle($operation);
     }
 }

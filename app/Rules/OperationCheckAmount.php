@@ -2,13 +2,13 @@
 
 namespace App\Rules;
 
-use App\Actions\FreeMoneyGetAction;
+use App\Actions\FreeMoneys\FreeMoneyGetAction;
 use App\Models\Category;
 use App\Models\Type;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class CheckAmount implements ValidationRule
+class OperationCheckAmount implements ValidationRule
 {
 
     public function __construct(
@@ -30,6 +30,7 @@ class CheckAmount implements ValidationRule
 
         if ($this->typeId == Type::DEPOSIT && $this->categoryId == Category::FROM_DEPOSIT)
         {
+            //todo дописать проверку на остаточность средств на депозите... Пу-пу-пу...
             return;
         }
 

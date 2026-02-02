@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Resources\Operations;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class OperationResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request) : array
+    {
+        return [
+            "id"         => $this->id,
+            "category"   => $this->category->name,
+            "type"       => $this->type->name,
+            "amount"     => $this->amount,
+            "comment"    => $this->comment,
+            "created_at" => $this->created_at,
+            "deposit"    => $this->deposit_id,
+        ];
+    }
+}
