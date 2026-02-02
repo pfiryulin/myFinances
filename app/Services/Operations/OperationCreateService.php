@@ -3,6 +3,7 @@
 namespace App\Services\Operations;
 
 use App\Actions\Calculate\Calculate;
+use App\Actions\Deposits\DepositGetAction;
 use App\Actions\Deposits\depositsGetAmountAction;
 use App\Actions\Deposits\DepositsUpdateAmountAction;
 use App\Actions\FreeMoneys\FreeMoneyGetAction;
@@ -28,7 +29,8 @@ class OperationCreateService
 
                 if ($operation->deposit_id)
                 {
-                    DepositsUpdateAmountAction::updateAmountDeposit($operation);
+                    $deposit = DepositGetAction::getDeposit($operation->deposit_id);
+                    DepositsUpdateAmountAction::updateAmountDeposit($operation, $deposit);
                 }
 
                 $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);
