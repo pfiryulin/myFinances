@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\FreeMoneys;
 
 use App\Models\FreeMoney;
 
@@ -11,7 +11,7 @@ class FreeMoneyGetAction
      *
      * @param int $userId
      *
-     * @return float
+     * @return \App\Models\FreeMoney
      */
     public static function getItem(int $userId) : FreeMoney
     {

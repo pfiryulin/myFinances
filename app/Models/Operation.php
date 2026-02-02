@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
  * @property \App\Models\User     $user
  * @property \App\Models\Category $category
  * @property \App\Models\Type     $type
+ * @property int                  $deposit_id
  */
 class Operation extends Model
 {
@@ -26,6 +27,7 @@ class Operation extends Model
         'type_id',
         'amount',
         'comment',
+        'deposit_id',
     ];
     protected static array $map = [
         'category_id' => 'category',
@@ -33,6 +35,7 @@ class Operation extends Model
         'amount'      => 'summ',
         'comment'     => 'comment',
         'user_id'     => 'userId',
+        'deposit_id' => 'deposit',
     ];
 
     /**
@@ -67,7 +70,6 @@ class Operation extends Model
 
     public static function register(array $fields) : self
     {
-        //todo Подумать как замапить эту хрень
         return static::create(
             [
                 'user_id'     => $fields[self::$map['user_id']],
@@ -75,6 +77,7 @@ class Operation extends Model
                 'type_id'     => $fields[self::$map['type_id']],
                 'amount'      => $fields[self::$map['amount']],
                 'comment'     => ($fields[self::$map['comment']]) ?? null,
+                'deposit_id' => $fields[self::$map['deposit_id']] ?? null,
             ]
         );
     }

@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Actions\OperationCreateAction;
+use App\Actions\Operations\GetOperationAction;
 use App\Http\Requests\StoreOperationRequest;
-use App\Http\Resources\OperationResource;
+use App\Http\Resources\Operations\OperationResource;
 use App\Models\Operation;
 use App\Services\Operations\OperationCreateService;
+use App\Services\Operations\OperationDeleteService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 
 class OperationController extends Controller
 {
@@ -50,17 +51,16 @@ class OperationController extends Controller
         $fields['userId'] = auth()->user()->id;
 
         $arrResult = OperationCreateService::storeOperationHandler($fields);
-        //todo дописать проверку на наличие ошибки в массиве. Если есть вернуть ошибку с Bad request.
-        //todo дописать возвращение массива ресурсов
+
         return $arrResult;
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id) : OperationResource|Response
+    public function show(int $id) : OperationResource|Response
     {
-        $operation = Operation::find($id);
+        $operation = GetOperationAction::getOperation($id);
         if(!$operation)
         {
             return response(['message' => 'Operation not found',], 404);
@@ -82,14 +82,30 @@ class OperationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        //todo
+        // 1. Валидировать запрос на право обновления данных
+        // 2. Валидировать данные для операции.
+        // 3. Если меняется сумма произвести пересчет свободных средств в обратную сторону (вычесть суммы операции
+        // или прибавить сумму операции)
+        //   3.1 Сохранить старую сумму
+        //   3.2. После успешного обновления записи пересчитать свободные средства
+        // 4. Обновить свободные средства.
+        // 5. Вернутьо операцию, свободные средства, обновленный баланс
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id) : int |Response
     {
-        //
+
+        $operation = GetOperationAction::getOperation($id);
+
+        if(!$operation)
+        {
+            return response(['message' => 'Operation not found',], 404);
+        }
+
+        return OperationDeleteService::handle($operation);
     }
 }

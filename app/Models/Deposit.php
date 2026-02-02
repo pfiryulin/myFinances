@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $id
- * @property int $user_id
- * @property string $name
- * @property int $amount
- * @property string $comment
+ * @property int              $id
+ * @property int              $user_id
+ * @property string           $name
+ * @property int              $amount
+ * @property string           $comment
  * @property \App\Models\User $user
  */
-
 class Deposit extends Model
 {
     protected $table = 'deposits';
@@ -25,6 +24,7 @@ class Deposit extends Model
     ];
 
     public const TO_DEPOSIT = 14;
+
     public const FROM_DEPOSIT = 15;
 
     /**
@@ -52,12 +52,11 @@ class Deposit extends Model
         string $name,
         float $amount,
         string $comment = null,
-    ) : self
-    {
+    ) : self {
         return static::create([
             'user_id' => $userId,
-            'name' => $name,
-            'amount' => $amount,
+            'name'    => $name,
+            'amount'  => $amount,
             'comment' => $comment,
         ]);
     }

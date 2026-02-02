@@ -2,48 +2,75 @@
 
 namespace App\Services\Operations;
 
-use App\Actions\OperationCreateAction;
-use App\Http\Resources\OperationResource;
+use App\Actions\Calculate\Calculate;
+use App\Actions\Deposits\DepositGetAction;
+use App\Actions\Deposits\depositsGetAmountAction;
+use App\Actions\Deposits\DepositsUpdateAmountAction;
+use App\Actions\FreeMoneys\FreeMoneyGetAction;
+use App\Actions\FreeMoneys\FreeMoneyUpdateAction;
+use App\Http\Resources\Operations\OperationResource;
+use App\Models\FreeMoneyHistory;
 use App\Models\Operation;
-use App\Services\FreeMoney\FreeMoneyServices;
 
+/**
+ * Класс отвечает за регистрацию новых операций.
+ * В случае успешной регистрации операции, обновляет значения доступных средств, делает запись об изменении доступных
+ * средств. Обновляет  состояние депохита, если операция была категории пополнение или снятие с депозита.
+ *
+ * Возвращает массив значений:
+ * Набор данных по новой операции
+ * Обновленное значение доступных средств
+ * Обновленное значение Баланса
+ *
+ */
 class OperationCreateService
 {
+    /**
+     * @param array $operationFields
+     *
+     * @return array|string[]
+     */
     public static function storeOperationHandler(array $operationFields) : array
     {
-        $result = [];
         $operation = null;
-        $freeMoney = null;
-        //todo нужно проверять возможность создания операции тут. Не создавать операцию, если сумма операции больше
-        // свободных денег.
-        // Получить тут свободные деньги
+        $freeMoney = 0;
+        $depositsAmount = 0;
         try
         {
             $operation = Operation::register($operationFields);
-//            $result['operation'] = new OperationResource($operation);
-            $operation->load(['category', 'type']);
+
+            if ($operation)
+            {
+                $operation->load(['category', 'type']);
+
+                if ($operation->deposit_id)
+                {
+                    $deposit = DepositGetAction::getDeposit($operation->deposit_id);
+                    DepositsUpdateAmountAction::updateAmountDeposit($operation, $deposit);
+                }
+
+                $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);
+                $freeMoney = FreeMoneyUpdateAction::updateFreeMoney($operation, $freeMoneyItem);
+
+                FreeMoneyHistory::register(
+                    $operation->user_id,
+                    $freeMoneyItem->id,
+                    $freeMoneyItem->amount,
+                    $freeMoneyItem->updated_at
+                );
+
+                $depositsAmount = DepositsGetAmountAction::getDepositsAmount($operation->user_id);
+            }
+
+            return [
+                'operation' => new OperationResource($operation),
+                'freeMoney' => $freeMoney->amount,
+                'balance'   => Calculate::pluss($freeMoney->amount, $depositsAmount),
+            ];
         }
         catch (\Exception $e)
         {
-            $result['error'] = $e->getMessage();
+            return ['error' => 'Some problems occurred, please try again.'];
         }
-
-        if($operation)
-        {
-            $freeMoney = FreeMoneyServices::updateFreeMoney($operation);
-        }
-        //todo
-        // 3. обновить свободные деньги
-        //   3.1 Расчитать сумму свободных денег
-        //   3.2 обновить свободные деньги в БД
-        //   3.3 сделать запись в таблицу истории свободных денег
-        // 4. обновить баланс
-        //   4.1 расчитать баланс. Получить свободные деньги -> получить депозиты -> расчитать балан
-        // 5. вернуть операцию, свободные деньги и баланс
-
-        return [
-            'operation' => new OperationResource($operation),
-            'freeMoney' => $freeMoney->amount,
-        ];
     }
 }
