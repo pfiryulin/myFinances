@@ -27,7 +27,7 @@ class OperationController extends Controller
 
         if($operations->isEmpty())
         {
-            return response(['message' => 'Operations not found',], 404);
+            return response(['message' => 'Operations not found',], Response::HTTP_NOT_FOUND);
         }
 
         return OperationResource::collection($operations);
@@ -96,7 +96,7 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) : int |Response
+    public function destroy(string $id) : array|Response
     {
 
         $operation = GetOperationAction::getOperation($id);

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use \App\Http\Controllers\OperationController;
 use Illuminate\Http\Request;
@@ -30,5 +31,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('operations', [OperationController::class, 'store']);
     Route::put('operations/{id}', [OperationController::class, 'update']);
     Route::delete('operations/{id}', [OperationController::class, 'destroy']);
+    Route::get('categories', [CategoryController::class, 'index']);
 });
 
