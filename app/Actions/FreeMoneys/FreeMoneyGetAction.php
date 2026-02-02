@@ -11,7 +11,7 @@ class FreeMoneyGetAction
      *
      * @param int $userId
      *
-     * @return float
+     * @return \App\Models\FreeMoney
      */
     public static function getItem(int $userId) : FreeMoney
     {

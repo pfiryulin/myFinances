@@ -12,8 +12,24 @@ use App\Http\Resources\Operations\OperationResource;
 use App\Models\FreeMoneyHistory;
 use App\Models\Operation;
 
+/**
+ * Класс отвечает за регистрацию новых операций.
+ * В случае успешной регистрации операции, обновляет значения доступных средств, делает запись об изменении доступных
+ * средств. Обновляет  состояние депохита, если операция была категории пополнение или снятие с депозита.
+ *
+ * Возвращает массив значений:
+ * Набор данных по новой операции
+ * Обновленное значение доступных средств
+ * Обновленное значение Баланса
+ *
+ */
 class OperationCreateService
 {
+    /**
+     * @param array $operationFields
+     *
+     * @return array|string[]
+     */
     public static function storeOperationHandler(array $operationFields) : array
     {
         $operation = null;

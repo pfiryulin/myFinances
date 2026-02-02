@@ -13,7 +13,6 @@ use \Illuminate\Database\Eloquent\Builder;
  * @property int              $user_id
  * @property \App\Models\Type $type
  * @property \App\Models\User $user
- * @method static Builder     serCategories($user_id)
  */
 class Category extends Model
 {
@@ -38,7 +37,7 @@ class Category extends Model
     }
 
     /**
-     * Отбор категорий пользователей и категорий дефолтных категорий операций
+     * Отбор категорий пользователей и дефолтных категорий операций
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @param int                                   $user_id
      *

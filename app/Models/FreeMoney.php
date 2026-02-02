@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * @property int $user_id
  * @property int $amount
+ * @property \App\Models\User $user
+ * @property \App\Models\FreeMoneyHistory $freeMoneyHistory
  *
+ * @mixin   \Illuminate\Database\Eloquent\Builder
  */
 class FreeMoney extends Model
 {
