@@ -3,65 +3,90 @@
 namespace App\Actions\FreeMoneys;
 
 use App\Actions\Calculate\Calculate;
+use App\Base\Interfaces\UpdateAmountInterface;
 use App\Models\Category;
 use App\Models\FreeMoney;
-use App\Models\FreeMoneyHistory;
 use App\Models\Operation;
 use App\Models\Type;
+use \PHPUnit\Event\InvalidArgumentException;
 
-class FreeMoneyUpdateAction
+class FreeMoneyUpdateAction implements UpdateAmountInterface
 {
     /**
      * update the record in the table free_money
      *
      * @param \App\Models\Operation $operation
-     * @param \App\Models\FreeMoney $freeMoneyItem
+     * @param \App\Models\FreeMoney $model
      *
      * @return FreeMoney
      */
-    public static function updateFreeMoney(
-        Operation $operation,
-        FreeMoney $freeMoneyItem,
-        string $modifier = 'plus'
-    ) : FreeMoney {
+    public static function updatingAtCreation(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model)
+    {
+        if(!$model instanceof FreeMoney)
+        {
+            throw new InvalidArgumentException('Неверный тип модели');
+        }
+
         switch ($operation->type_id)
         {
             case Type::INCOME:
-                if($modifier === 'plus')
-                {
-                    $newAmount = Calculate::pluss($freeMoneyItem->amount, $operation->amount);
-                }
-                else
-                {
-                    $newAmount = Calculate::minus($freeMoneyItem->amount, $operation->amount);
-                }
+                $newAmount = Calculate::pluss($model->amount, $operation->amount);
                 break;
 
             case Type::EXPENDITURE:
-                if($modifier === 'plus')
-                {
-                    $newAmount = Calculate::minus($freeMoneyItem->amount, $operation->amount);
-                }
-                else
-                {
-                    $newAmount = Calculate::pluss($freeMoneyItem->amount, $operation->amount);
-                }
+                $newAmount = Calculate::minus($model->amount, $operation->amount);
                 break;
 
             case Type::DEPOSIT:
                 if ($operation->category_id == Category::TO_DEPOSIT)
                 {
-                    $newAmount = Calculate::minus($freeMoneyItem->amount, $operation->amount);
+                    $newAmount = Calculate::minus($model->amount, $operation->amount);
                 }
                 else
                 {
-                    $newAmount = Calculate::pluss($freeMoneyItem->amount, $operation->amount);
+                    $newAmount = Calculate::pluss($model->amount, $operation->amount);
                 }
                 break;
         }
 
-        $freeMoneyItem->update(['amount' => $newAmount]);
+        $model->update(['amount' => $newAmount]);
 
-        return $freeMoneyItem;
+        return $model;
     }
+
+    public static function updatingAtDeleting(Operation $operation, /** @var $model \App\Models\FreeMoney */$model)
+    {
+        if(!$model instanceof FreeMoney)
+        {
+            throw new \PHPUnit\Event\InvalidArgumentException('Неверный тип модели');
+        }
+
+        switch ($operation->type_id)
+        {
+            case Type::INCOME:
+                $newAmount = Calculate::minus($model->amount, $operation->amount);
+                break;
+
+            case Type::EXPENDITURE:
+                $newAmount = Calculate::pluss($model->amount, $operation->amount);
+                break;
+
+            case Type::DEPOSIT:
+                if ($operation->category_id == Category::TO_DEPOSIT)
+                {
+                    $newAmount = Calculate::pluss($model->amount, $operation->amount);
+                }
+            else
+                {
+                    $newAmount = Calculate::minus($model->amount, $operation->amount);
+                }
+                break;
+        }
+
+        $model->update(['amount' => $newAmount]);
+
+        return $model;
+    }
+
+    public static function updatingAtUpdate(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model){}
 }

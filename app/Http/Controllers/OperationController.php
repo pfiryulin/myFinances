@@ -106,6 +106,7 @@ class OperationController extends Controller
             return response(['message' => 'Operation not found',], 404);
         }
 
+        //todo дописать проверку на error и возвращать с кодом, если ошибка есть
         return OperationDeleteService::handle($operation);
     }
 }

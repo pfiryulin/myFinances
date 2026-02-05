@@ -5,7 +5,7 @@ namespace App\Services\Operations;
 use App\Actions\Calculate\Calculate;
 use App\Actions\Deposits\DepositGetAction;
 use App\Actions\Deposits\depositsGetAmountAction;
-use App\Actions\Deposits\DepositsUpdateAmountAction;
+use App\Actions\Deposits\DepositsUpdateAction;
 use App\Actions\FreeMoneys\FreeMoneyGetAction;
 use App\Actions\FreeMoneys\FreeMoneyUpdateAction;
 use App\Models\Operation;
@@ -23,12 +23,12 @@ class OperationDeleteService
         {
             if ($operation->delete())
             {
-                $freeMoney = FreeMoneyUpdateAction::updateFreeMoney($operation, $freeMoney, 'minus');
+                $freeMoney = FreeMoneyUpdateAction::updatingAtDeleting($operation, $freeMoney);
                 if ($operationType == Type::DEPOSIT)
                 {
                     $deposit = DepositGetAction::getDeposit($operation->deposit_id);
                     //todo неврно считается при обновлении депозита
-                    DepositsUpdateAmountAction::updateAmountDeposit($operation, $deposit);
+                    DepositsUpdateAction::updatingAtDeleting($operation, $deposit);
 
                 }
 
@@ -44,7 +44,11 @@ class OperationDeleteService
         }
         catch (\Exception $e)
         {
-            return $e->getMessage() . '/' . $e->getFile() . ':' . $e->getLine();
+            return [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+//                $e->getMessage() . '/' . $e->getFile() . ':' . $e->getLine();
         }
 
         // 2. Запомнить Сумму операции и её тип.
