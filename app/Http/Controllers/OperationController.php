@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\OperationCreateAction;
 use App\Actions\Operations\GetOperationAction;
-use App\Http\Requests\StoreOperationRequest;
+use App\Http\Requests\OperationRequest;
 use App\Http\Resources\Operations\OperationResource;
 use App\Models\Operation;
 use App\Services\Operations\OperationCreateService;
@@ -44,7 +44,7 @@ class OperationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOperationRequest $request) : array
+    public function store(OperationRequest $request) : array
     {
 
         $fields = $request->all();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\Categories\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -37,17 +38,28 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id) : CategoryResource|Response
     {
-        //
+        $userId = Auth::user()->id;
+
+        $category = Category::where('id', $id)
+                            ->where(function($query) use($userId) {
+                                $query->where('user_id', $userId)->orWhereNull('user_id');
+                            })->first();
+        if(!$category)
+        {
+            return response(['message' => 'Category not found',], Response::HTTP_NOT_FOUND);
+        }
+
+        return CategoryResource::make($category);
     }
 
     /**

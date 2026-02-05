@@ -32,5 +32,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('operations/{id}', [OperationController::class, 'update']);
     Route::delete('operations/{id}', [OperationController::class, 'destroy']);
     Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('categories/{id}', [CategoryController::class, 'show']);
 });
 

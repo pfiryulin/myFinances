@@ -6,7 +6,7 @@ use App\Rules\OperationCheckAmount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StoreOperationRequest extends FormRequest
+class OperationRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
