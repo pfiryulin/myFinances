@@ -14,14 +14,14 @@ use App\Models\FreeMoneyHistory;
 use App\Models\Operation;
 
 /**
- * Класс отвечает за регистрацию новых операций.
- * В случае успешной регистрации операции, обновляет значения доступных средств, делает запись об изменении доступных
- * средств. Обновляет  состояние депохита, если операция была категории пополнение или снятие с депозита.
+ * The class is responsible for registering new operations.
+ * In case of successful registration of the operation, updates the values of the available funds, makes a record of changes in the available
+ * funds. Updates the deposit status if the operation was of the deposit replenishment or withdrawal category.
  *
- * Возвращает массив значений:
- * Набор данных по новой операции
- * Обновленное значение доступных средств
- * Обновленное значение Баланса
+ * Returns an array of values:
+ * A set of data for a new operation
+ * Updated value of available funds
+ * Updated Balance Value
  *
  */
 class OperationCreateService

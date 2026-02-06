@@ -12,6 +12,8 @@ use PHPUnit\Event\InvalidArgumentException;
 class DepositsUpdateAction implements UpdateAmountInterface
 {
     /**
+     * The method updates the deposit value when creating an operation.
+     *
      * @param \App\Models\Operation $operation
      * @param \App\Models\Deposit   $model
      *
@@ -19,7 +21,7 @@ class DepositsUpdateAction implements UpdateAmountInterface
      */
     public static function updatingAtCreation(Operation $operation, $model) : void
     {
-        if($model instanceof Deposit)
+        if (!static::checkModelType($model))
         {
             throw new InvalidArgumentException('Неверный тип модели');
         }
@@ -34,13 +36,22 @@ class DepositsUpdateAction implements UpdateAmountInterface
                 $model->update(['amount' => Calculate::minus($model->amount, $operation->amount)]);
                 break;
 
-            default: break;
+            default:
+                break;
         }
     }
 
+    /**
+     * The method updates the deposit value when the operation is deleted.
+     *
+     * @param \App\Models\Operation $operation
+     * @param \App\Models\Deposit   $model
+     *
+     * @return void
+     */
     public static function updatingAtDeleting(Operation $operation, $model)
     {
-        if($model instanceof Deposit)
+        if (!static::checkModelType($model))
         {
             throw new InvalidArgumentException('Неверный тип модели');
         }
@@ -55,8 +66,22 @@ class DepositsUpdateAction implements UpdateAmountInterface
                 $model->update(['amount' => Calculate::pluss($operation->amount, $model->amount)]);
                 break;
 
-            default: break;
+            default:
+                break;
         }
     }
-    public static function updatingAtUpdate(Operation $operation, $amount){}
+
+    public static function updatingAtUpdate(Operation $operation, $amount) { }
+
+    /**
+     * The method checks whether the target model variable matches
+     *
+     * @param $model
+     *
+     * @return bool
+     */
+    public function checkModelType($model) : bool
+    {
+        return $model instanceof Deposit;
+    }
 }

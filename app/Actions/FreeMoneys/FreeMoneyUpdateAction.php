@@ -22,7 +22,7 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
      */
     public static function updatingAtCreation(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model)
     {
-        if(!$model instanceof FreeMoney)
+        if (!$model instanceof FreeMoney)
         {
             throw new InvalidArgumentException('Неверный тип модели');
         }
@@ -54,9 +54,9 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
         return $model;
     }
 
-    public static function updatingAtDeleting(Operation $operation, /** @var $model \App\Models\FreeMoney */$model)
+    public static function updatingAtDeleting(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model)
     {
-        if(!$model instanceof FreeMoney)
+        if (!static::checkModelType($model))
         {
             throw new \PHPUnit\Event\InvalidArgumentException('Неверный тип модели');
         }
@@ -76,7 +76,7 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
                 {
                     $newAmount = Calculate::pluss($model->amount, $operation->amount);
                 }
-            else
+                else
                 {
                     $newAmount = Calculate::minus($model->amount, $operation->amount);
                 }
@@ -88,5 +88,10 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
         return $model;
     }
 
-    public static function updatingAtUpdate(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model){}
+    public static function updatingAtUpdate(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model) { }
+
+    public function checkModelType($model) : bool
+    {
+        return $model instanceof FreeMoney;
+    }
 }

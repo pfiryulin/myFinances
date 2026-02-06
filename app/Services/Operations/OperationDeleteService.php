@@ -15,9 +15,7 @@ class OperationDeleteService
 {
     public static function handle(Operation $operation)
     {
-        $operationAmount = $operation->amount;
         $operationType = $operation->type_id;
-        $operationCategory = $operation->category_id;
         $freeMoney = FreeMoneyGetAction::getItem($operation->user_id);
         try
         {
