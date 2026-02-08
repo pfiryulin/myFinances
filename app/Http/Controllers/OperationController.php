@@ -50,9 +50,7 @@ class OperationController extends Controller
         $fields = $request->all();
         $fields['userId'] = auth()->user()->id;
 
-        $arrResult = OperationCreateService::storeOperationHandler($fields);
-
-        return $arrResult;
+        return OperationCreateService::storeOperationHandler($fields);
     }
 
     /**
@@ -80,7 +78,7 @@ class OperationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
         //todo
         // 1. Валидировать запрос на право обновления данных
@@ -96,17 +94,16 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id) : array|Response
+    public function destroy(Request $request) : array|Response
     {
 
-        $operation = GetOperationAction::getOperation($id);
+        $operation = GetOperationAction::getOperation($request['id']);
 
         if(!$operation)
         {
             return response(['message' => 'Operation not found',], 404);
         }
 
-        //todo дописать проверку на error и возвращать с кодом, если ошибка есть
         return OperationDeleteService::handle($operation);
     }
 }

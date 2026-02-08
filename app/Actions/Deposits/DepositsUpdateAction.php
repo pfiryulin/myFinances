@@ -19,9 +19,9 @@ class DepositsUpdateAction implements UpdateAmountInterface
      *
      * @return void
      */
-    public static function updatingAtCreation(Operation $operation, $model) : void
+    public function updatingAtCreation(Operation $operation, $model) : void
     {
-        if (!static::checkModelType($model))
+        if (!$this->checkModelType($model))
         {
             throw new InvalidArgumentException('Неверный тип модели');
         }
@@ -49,9 +49,9 @@ class DepositsUpdateAction implements UpdateAmountInterface
      *
      * @return void
      */
-    public static function updatingAtDeleting(Operation $operation, $model)
+    public function updatingAtDeleting(Operation $operation, $model)
     {
-        if (!static::checkModelType($model))
+        if (!$this->checkModelType($model))
         {
             throw new InvalidArgumentException('Неверный тип модели');
         }
@@ -71,7 +71,7 @@ class DepositsUpdateAction implements UpdateAmountInterface
         }
     }
 
-    public static function updatingAtUpdate(Operation $operation, $amount) { }
+    public function updatingAtUpdate(Operation $operation, $amount) { }
 
     /**
      * The method checks whether the target model variable matches

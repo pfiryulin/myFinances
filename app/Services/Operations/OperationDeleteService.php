@@ -21,11 +21,11 @@ class OperationDeleteService
         {
             if ($operation->delete())
             {
-                $freeMoney = FreeMoneyUpdateAction::updatingAtDeleting($operation, $freeMoney);
+                $updateAction = new FreeMoneyUpdateAction();
+                $freeMoney = $updateAction->updatingAtDeleting($operation, $freeMoney);
                 if ($operationType == Type::DEPOSIT)
                 {
                     $deposit = DepositGetAction::getDeposit($operation->deposit_id);
-                    //todo неврно считается при обновлении депозита
                     DepositsUpdateAction::updatingAtDeleting($operation, $deposit);
 
                 }

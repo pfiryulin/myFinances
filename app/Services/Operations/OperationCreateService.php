@@ -47,11 +47,13 @@ class OperationCreateService
                 if ($operation->deposit_id)
                 {
                     $deposit = DepositGetAction::getDeposit($operation->deposit_id);
-                    DepositsUpdateAction::updatingAtCreation($operation, $deposit);
+                    $updateDeposit = new DepositsUpdateAction();
+                    $updateDeposit->updatingAtCreation($operation, $deposit);
                 }
 
                 $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);
-                $freeMoney = FreeMoneyUpdateAction::updatingAtCreation($operation, $freeMoneyItem);
+                $updateFreeMoney = new FreeMoneyUpdateAction();
+                $freeMoney = $updateFreeMoney->updatingAtCreation($operation, $freeMoneyItem);
 
                 FreeMoneyHistory::register(
                     $operation->user_id,
@@ -71,7 +73,7 @@ class OperationCreateService
         }
         catch (\Exception $e)
         {
-            return ['error' => 'Some problems occurred, please try again.'];
+            return ['error' => $e->getMessage()];
         }
     }
 }

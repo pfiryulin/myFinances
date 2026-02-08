@@ -12,7 +12,7 @@ interface  UpdateAmountInterface
      *
      * @return mixed
      */
-    public static function updatingAtCreation(Operation $operation, $model);
+    public function updatingAtCreation(Operation $operation, $model);
 
     /**
      * @param \App\Models\Operation $operation
@@ -20,7 +20,7 @@ interface  UpdateAmountInterface
      *
      * @return mixed
      */
-    public static function updatingAtDeleting(Operation $operation, $model);
+    public function updatingAtDeleting(Operation $operation, $model);
 
     /**
      * @param \App\Models\Operation $operation
@@ -28,7 +28,7 @@ interface  UpdateAmountInterface
      *
      * @return mixed
      */
-    public static function updatingAtUpdate(Operation $operation, $amount);
+    public function updatingAtUpdate(Operation $operation, $amount);
 
     /**
      * @param $model
