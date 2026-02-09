@@ -32,10 +32,10 @@ class Operation extends Model
     protected static array $map = [
         'category_id' => 'category',
         'type_id'     => 'type',
-        'amount'      => 'summ',
+        'amount'      => 'amount',
         'comment'     => 'comment',
         'user_id'     => 'userId',
-        'deposit_id' => 'deposit',
+        'deposit_id'  => 'deposit',
     ];
 
     /**
@@ -77,7 +77,7 @@ class Operation extends Model
                 'type_id'     => $fields[self::$map['type_id']],
                 'amount'      => $fields[self::$map['amount']],
                 'comment'     => ($fields[self::$map['comment']]) ?? null,
-                'deposit_id' => $fields[self::$map['deposit_id']] ?? null,
+                'deposit_id'  => $fields[self::$map['deposit_id']] ?? null,
             ]
         );
     }

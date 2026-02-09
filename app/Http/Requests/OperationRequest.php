@@ -18,7 +18,7 @@ class OperationRequest extends FormRequest
         return [
             'category' => ['required', 'exists:categories,id'],
             'type' => ['required', 'exists:types,id'],
-            'summ' => [
+            'amount' => [
                 'required',
                 'numeric',
                 'min:0,01',

@@ -9,6 +9,7 @@ use App\Http\Resources\Operations\OperationResource;
 use App\Models\Operation;
 use App\Services\Operations\OperationCreateService;
 use App\Services\Operations\OperationDeleteService;
+use App\Services\Operations\OperationUpdateService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -20,6 +21,8 @@ class OperationController extends Controller
      */
     public function index(Request $request) : AnonymousResourceCollection|Response
     {
+
+        //todo Дописать фильтрацию и сортировку операций.
         $operations = Operation::where('user_id', auth()->user()->id)->with([
                 'category',
                 'type',
@@ -61,7 +64,7 @@ class OperationController extends Controller
         $operation = GetOperationAction::getOperation($id);
         if(!$operation)
         {
-            return response(['message' => 'Operation not found',], 404);
+            return response(['message' => 'Operation not found',], Response::HTTP_NOT_FOUND);
         }
 
         return new OperationResource($operation);
@@ -76,27 +79,11 @@ class OperationController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request)
-    {
-        //todo
-        // 1. Валидировать запрос на право обновления данных
-        // 2. Валидировать данные для операции.
-        // 3. Если меняется сумма произвести пересчет свободных средств в обратную сторону (вычесть суммы операции
-        // или прибавить сумму операции)
-        //   3.1 Сохранить старую сумму
-        //   3.2. После успешного обновления записи пересчитать свободные средства
-        // 4. Обновить свободные средства.
-        // 5. Вернутьо операцию, свободные средства, обновленный баланс
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Request $request) : array|Response
     {
-
+        //todo дописать валидацию запроса. Проверять права на данную запись у пользователя.
         $operation = GetOperationAction::getOperation($request['id']);
 
         if(!$operation)
