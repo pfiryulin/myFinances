@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Auth;
 
-class OperationDeleteRules implements ValidationRule
+class OperationCheckOwner implements ValidationRule
 {
     /**
      * Run the validation rule.

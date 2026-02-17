@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\OperationDeleteRules;
+use App\Rules\OperationCheckOwner;
 use Illuminate\Foundation\Http\FormRequest;
 
 class OperationDeleteRequest extends FormRequest
@@ -23,7 +23,7 @@ class OperationDeleteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'integer', 'exists:operations,id', new OperationDeleteRules()],
+            'id' => ['required', 'integer', 'exists:operations,id', new OperationCheckOwner()],
         ];
     }
 }
