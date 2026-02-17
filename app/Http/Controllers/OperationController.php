@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\OperationCreateAction;
 use App\Actions\Operations\GetOperationAction;
+use App\Http\Requests\OperationDeleteRequest;
 use App\Http\Requests\OperationRequest;
 use App\Http\Resources\Operations\OperationResource;
 use App\Models\Operation;
@@ -23,6 +24,7 @@ class OperationController extends Controller
     {
 
         //todo Дописать фильтрацию и сортировку операций.
+        // Дописать пагинацию
         $operations = Operation::where('user_id', auth()->user()->id)->with([
                 'category',
                 'type',
@@ -81,7 +83,7 @@ class OperationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request) : array|Response
+    public function destroy(OperationDeleteRequest $request) : array|Response
     {
         //todo дописать валидацию запроса. Проверять права на данную запись у пользователя.
         $operation = GetOperationAction::getOperation($request['id']);
@@ -104,10 +106,5 @@ class OperationController extends Controller
         }
 
         return OperationUpdateService::handle($request, $operation );
-        //todo
-        // Проверять изменение суммы
-        // Проверять изменение депозита
-        // При изменении суммы пересчитывать связанные сущности.
-        //
     }
 }
