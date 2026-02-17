@@ -12,6 +12,7 @@ use App\Actions\FreeMoneys\FreeMoneyUpdateAction;
 use App\Http\Resources\Operations\OperationResource;
 use App\Models\FreeMoneyHistory;
 use App\Models\Operation;
+use App\Services\Entities\EntityUpdateService;
 
 /**
  * The class is responsible for registering new operations.
@@ -31,45 +32,18 @@ class OperationCreateService
      *
      * @return array|string[]
      */
-    public static function storeOperationHandler(array $operationFields) : array
+    public static function handle(array $operationFields) : array
     {
-        $operation = null;
-        $freeMoney = 0;
-        $depositsAmount = 0;
         try
         {
             $operation = Operation::register($operationFields);
 
             if ($operation)
             {
-                $operation->load(['category', 'type']);
-
-                if ($operation->deposit_id)
-                {
-                    $deposit = DepositGetAction::getDeposit($operation->deposit_id);
-                    $updateDeposit = new DepositsUpdateAction();
-                    $updateDeposit->updatingAtCreation($operation, $deposit);
-                }
-
-                $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);
-                $updateFreeMoney = new FreeMoneyUpdateAction();
-                $freeMoney = $updateFreeMoney->updatingAtCreation($operation, $freeMoneyItem);
-
-                FreeMoneyHistory::register(
-                    $operation->user_id,
-                    $freeMoneyItem->id,
-                    $freeMoneyItem->amount,
-                    $freeMoneyItem->updated_at
-                );
-
-                $depositsAmount = DepositsGetAmountAction::getDepositsAmount($operation->user_id);
+                return EntityUpdateService::afterCreateHandle($operation);
             }
 
-            return [
-                'operation' => new OperationResource($operation),
-                'freeMoney' => $freeMoney->amount,
-                'balance'   => Calculate::pluss($freeMoney->amount, $depositsAmount),
-            ];
+            throw new \Exception("Operation was not registered");
         }
         catch (\Exception $e)
         {

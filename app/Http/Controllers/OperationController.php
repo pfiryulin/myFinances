@@ -53,7 +53,7 @@ class OperationController extends Controller
         $fields = $request->all();
         $fields['userId'] = auth()->user()->id;
 
-        return OperationCreateService::storeOperationHandler($fields);
+        return OperationCreateService::handle($fields);
     }
 
     /**
@@ -88,9 +88,26 @@ class OperationController extends Controller
 
         if(!$operation)
         {
-            return response(['message' => 'Operation not found',], 404);
+            return response(['message' => 'Operation not found',], Response::HTTP_NOT_FOUND);
         }
 
         return OperationDeleteService::handle($operation);
+    }
+
+    public function update(Request $request)
+    {
+        $operation = GetOperationAction::getOperation($request['id']);
+
+        if(!$operation)
+        {
+            return response(['message' => 'Operation not found',], Response::HTTP_NOT_FOUND);
+        }
+
+        return OperationUpdateService::handle($request, $operation );
+        //todo
+        // Проверять изменение суммы
+        // Проверять изменение депозита
+        // При изменении суммы пересчитывать связанные сущности.
+        //
     }
 }

@@ -68,17 +68,44 @@ class Operation extends Model
         return $this->belongsTo(Type::class, 'type_id', 'id');
     }
 
+    /**
+     * @param array $fields
+     *
+     * @return self
+     */
     public static function register(array $fields) : self
     {
-        return static::create(
-            [
-                'user_id'     => $fields[self::$map['user_id']],
-                'category_id' => $fields[self::$map['category_id']],
-                'type_id'     => $fields[self::$map['type_id']],
-                'amount'      => $fields[self::$map['amount']],
-                'comment'     => ($fields[self::$map['comment']]) ?? null,
-                'deposit_id'  => $fields[self::$map['deposit_id']] ?? null,
-            ]
-        );
+        return static::create(static::mapping($fields));
+    }
+
+    /**
+     * Updating the model
+     *
+     * @param array $fields
+     *
+     * @return bool
+     */
+    public function updateOperation(array $fields) : bool
+    {
+        return $this->update(static::mapping($fields));
+    }
+
+    /**
+     * Converts incoming data to the model format
+     *
+     * @param array $fields
+     *
+     * @return array
+     */
+    private static function mapping(array $fields) : array
+    {
+        return [
+            'user_id'     => $fields[self::$map['user_id']],
+            'category_id' => $fields[self::$map['category_id']],
+            'type_id'     => $fields[self::$map['type_id']],
+            'amount'      => $fields[self::$map['amount']],
+            'comment'     => ($fields[self::$map['comment']]) ?? null,
+            'deposit_id'  => $fields[self::$map['deposit_id']] ?? null,
+        ];
     }
 }

@@ -10,35 +10,22 @@ use App\Actions\FreeMoneys\FreeMoneyGetAction;
 use App\Actions\FreeMoneys\FreeMoneyUpdateAction;
 use App\Models\Operation;
 use App\Models\Type;
+use App\Services\Entities\EntityUpdateService;
 
 class OperationDeleteService
 {
     public static function handle(Operation $operation)
     {
-        $operationType = $operation->type_id;
-        $freeMoney = FreeMoneyGetAction::getItem($operation->user_id);
         try
         {
+
             if ($operation->delete())
             {
-                $updateAction = new FreeMoneyUpdateAction();
-                $freeMoney = $updateAction->updatingAtDeleting($operation, $freeMoney);
-                if ($operationType == Type::DEPOSIT)
-                {
-                    $deposit = DepositGetAction::getDeposit($operation->deposit_id);
-                    DepositsUpdateAction::updatingAtDeleting($operation, $deposit);
+                return EntityUpdateService::afterDeleteHandle($operation);
 
-                }
-
-                $depositsAmount = depositsGetAmountAction::getDepositsAmount($operation->user_id);
             }
 
-            return [
-                'freeMoney' => $freeMoney->amount,
-                'balance' => Calculate::pluss($freeMoney->amount, $depositsAmount),
-            ];
-
-
+            throw new \Exception("Operation was not deleted");
         }
         catch (\Exception $e)
         {
@@ -46,13 +33,7 @@ class OperationDeleteService
                 'error' => $e->getMessage(),
                 'code' => $e->getCode(),
             ];
-//                $e->getMessage() . '/' . $e->getFile() . ':' . $e->getLine();
         }
 
-        // 2. Запомнить Сумму операции и её тип.
-        // 3. Удалить операцию.
-        // 4. Если операция удалена успешно, пересчитать свободные средства и баланс
-        // 6. Вернуть удаленную оперцию, свободные средства и баланс.
-        return false;
     }
 }
