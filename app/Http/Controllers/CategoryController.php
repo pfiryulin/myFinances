@@ -32,7 +32,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -40,7 +40,15 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
+        $category = Category::create([
+            'name' => $request->name,
+            'type_id' => $request->type,
+            'user_id' => Auth::user()->id,
+        ]);
 
+        $category->load('type');
+
+        return new CategoryResource($category);
     }
 
     /**
@@ -50,16 +58,15 @@ class CategoryController extends Controller
     {
         $userId = Auth::user()->id;
 
-        $category = Category::where('id', $id)
-                            ->where(function($query) use($userId) {
-                                $query->where('user_id', $userId)->orWhereNull('user_id');
-                            })->first();
+        $category = Category::categoryItem($id, $userId)
+                            ->with('type')
+                            ->get()->first();
         if(!$category)
         {
             return response(['message' => 'Category not found',], Response::HTTP_NOT_FOUND);
         }
 
-        return CategoryResource::make($category);
+        return new CategoryResource($category);
     }
 
     /**
@@ -83,6 +90,6 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+//        $category = Category::;
     }
 }

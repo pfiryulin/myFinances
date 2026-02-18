@@ -22,7 +22,8 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => ['required', 'exists:types,id'],
+            'name' => ['required', 'string'],
         ];
     }
 }
