@@ -21,6 +21,8 @@ class Type extends Model
 
     const DEPOSIT = 3;
 
+    const RETURN_TYPES = [self::INCOME, self::EXPENDITURE];
+
     /**
      * Получаем все категории по типу
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
