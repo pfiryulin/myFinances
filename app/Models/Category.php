@@ -48,7 +48,7 @@ class Category extends Model
         return $query->where('user_id', $user_id)->orWhereNull('user_id');
     }
 
-    public function scopeCategoryItem(Builder $query, int $id, int $userId) : Builder
+    public function scopeCategoryItem(Builder $query, int|string $id, int $userId) : Builder
     {
         return $query->where('id', $id)
             ->where(function($query) use($userId) {

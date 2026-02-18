@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Models\FreeMoney;
 use App\Models\Operation;
 use App\Models\Type;
-use \PHPUnit\Event\InvalidArgumentException;
+use PHPUnit\Event\InvalidArgumentException;
 
 class FreeMoneyUpdateAction implements UpdateAmountInterface
 {
@@ -20,12 +20,14 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
      *
      * @return FreeMoney
      */
-    public function updatingAtCreation(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model)
+    public function updatingAtCreation(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model) : FreeMoney
     {
         if (!$this->checkModelType($model))
         {
             throw new InvalidArgumentException('Неверный тип модели');
         }
+
+        $newAmount = $model->amount;
 
         switch ($operation->type_id)
         {
@@ -60,6 +62,8 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
         {
             throw new \PHPUnit\Event\InvalidArgumentException('Неверный тип модели');
         }
+
+        $newAmount = $model->amount;
 
         switch ($operation->type_id)
         {

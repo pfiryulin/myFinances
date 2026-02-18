@@ -60,7 +60,7 @@ class CategoryController extends Controller
 
         $category = Category::categoryItem($id, $userId)
                             ->with('type')
-                            ->get()->first();
+                            ->first();
         if(!$category)
         {
             return response(['message' => 'Category not found',], Response::HTTP_NOT_FOUND);

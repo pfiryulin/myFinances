@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int              $user_id
  * @property string           $name
  * @property int              $amount
- * @property string           $comment
+ * @property string|null          $comment
  * @property \App\Models\User $user
  */
 class Deposit extends Model

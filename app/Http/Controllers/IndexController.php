@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Base\BaseActions\FreeMoneyAction;
 use App\Models\Deposit;
 use http\Client\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,7 @@ class IndexController extends Controller
         return view('login');
     }
 
-    public function logout(Request $request) : RedirectResponse
+    public function logout(Request $request) : JsonResponse
     {
         Auth::logout();
         $request->session()->invalidate();
