@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Category\CategoryGetAction;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\Categories\CategoryResource;
 use App\Models\Category;
@@ -56,17 +57,15 @@ class CategoryController extends Controller
      */
     public function show(string $id) : CategoryResource|Response
     {
-        $userId = Auth::user()->id;
-
-        $category = Category::categoryItem($id, $userId)
-                            ->with('type')
-                            ->first();
-        if(!$category)
+        try
         {
-            return response(['message' => 'Category not found',], Response::HTTP_NOT_FOUND);
+            $category = CategoryGetAction::getCategory($id);
+            return new CategoryResource($category);
         }
-
-        return new CategoryResource($category);
+        catch(\Exception $e)
+        {
+            return response(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -80,9 +79,18 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id) : CategoryResource|Response
     {
-        //
+        try{
+            $category = CategoryGetAction::getCategory($id);
+            $category->update($request->all());
+        }
+        catch(\Exception $e)
+        {
+            return response(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        }
+
+        return new CategoryResource($category);
     }
 
     /**
