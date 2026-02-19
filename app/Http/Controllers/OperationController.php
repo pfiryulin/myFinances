@@ -63,13 +63,15 @@ class OperationController extends Controller
      */
     public function show(int $id) : OperationResource|Response
     {
-        $operation = GetOperationAction::getOperation($id);
-        if(!$operation)
+        try
         {
-            return response(['message' => 'Operation not found',], Response::HTTP_NOT_FOUND);
+            $operation = GetOperationAction::getOperation($id);
+            return new OperationResource($operation);
         }
-
-        return new OperationResource($operation);
+        catch(\Exception $e)
+        {
+            return response(['message' => $e->getMessage(),], Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -85,26 +87,27 @@ class OperationController extends Controller
      */
     public function destroy(OperationDeleteRequest $request) : array|Response
     {
-        //todo дописать валидацию запроса. Проверять права на данную запись у пользователя.
-        $operation = GetOperationAction::getOperation($request['id']);
-
-        if(!$operation)
+        try
         {
-            return response(['message' => 'Operation not found',], Response::HTTP_NOT_FOUND);
+            $operation = GetOperationAction::getOperation($request['id']);
+            return OperationDeleteService::handle($operation);
         }
-
-        return OperationDeleteService::handle($operation);
+        catch(\Exception $e)
+        {
+            return response(['message' => $e->getMessage(),], $e->getCode());
+        }
     }
 
     public function update(Request $request)
     {
-        $operation = GetOperationAction::getOperation($request['id']);
-
-        if(!$operation)
+        try
         {
-            return response(['message' => 'Operation not found',], Response::HTTP_NOT_FOUND);
+            $operation = GetOperationAction::getOperation($request['id']);
+            return OperationUpdateService::handle($request, $operation );
         }
-
-        return OperationUpdateService::handle($request, $operation );
+        catch(\Exception $e)
+        {
+            return response(['message' => $e->getMessage(),], $e->getCode());
+        }
     }
 }

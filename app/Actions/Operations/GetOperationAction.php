@@ -8,7 +8,12 @@ class GetOperationAction
 {
     public static function getOperation(int $id) : Operation | null
     {
-        return Operation::find($id);
+        $operation = Operation::find($id);
+        if(!$operation)
+        {
+            throw new \Exception("Operation not found");
+        }
+        return $operation;
     }
 
 }
