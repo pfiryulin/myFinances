@@ -56,6 +56,12 @@ class FreeMoneyUpdateAction implements UpdateAmountInterface
         return $model;
     }
 
+    /**
+     * @param \App\Models\Operation $operation
+     * @param                       $model
+     *
+     * @return mixed
+     */
     public function updatingAtDeleting(Operation $operation, /** @var $model \App\Models\FreeMoney */ $model)
     {
         if (!$this->checkModelType($model))

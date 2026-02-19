@@ -9,6 +9,7 @@ class TypeGetAction
 {
     /**
      * @throws \Exception
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public static function getType() : Collection
     {
@@ -21,6 +22,10 @@ class TypeGetAction
         return $types;
     }
 
+    /**
+     * @throws \Exception
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public static function getAllType() : Collection
     {
         $types = Type::all();

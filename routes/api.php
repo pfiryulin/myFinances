@@ -6,6 +6,7 @@ use App\Http\Controllers\OperationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\DepositController;
 
 
 Route::post('/login', function (Request $request) {
@@ -40,5 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('type', [TypeController::class, 'index']);
     Route::get('type/all', [TypeController::class, 'allList']);
+
+    Route::get('deposit', [DepositController::class, 'index']);
 });
 

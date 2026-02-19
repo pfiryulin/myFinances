@@ -16,6 +16,13 @@ use App\Models\Type;
 
 class EntityUpdateService
 {
+    /**
+     * Updates entities after deleting an operation
+     *
+     * @param \App\Models\Operation $operation
+     *
+     * @return array
+     */
     public static function afterDeleteHandle(Operation $operation) : array
     {
         $freeMoney = FreeMoneyGetAction::getItem($operation->user_id);
@@ -38,6 +45,13 @@ class EntityUpdateService
         ];
     }
 
+    /**
+     * Updates entities after creating an operation
+     *
+     * @param \App\Models\Operation $operation
+     *
+     * @return array
+     */
     public static function afterCreateHandle(Operation $operation) : array
     {
         $operation->load(['category', 'type']);
