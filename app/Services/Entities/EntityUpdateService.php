@@ -34,9 +34,20 @@ class EntityUpdateService
 
         if ($operationType == Type::DEPOSIT)
         {
-            $deposit = DepositGetAction::getDeposit($operation->deposit_id);
-            $updateDeposit = new DepositsUpdateAction();
-            $updateDeposit->updatingAtDeleting($operation, $deposit);
+            try
+            {
+                $deposit = DepositGetAction::getDeposit($operation->deposit_id);
+                $updateDeposit = new DepositsUpdateAction();
+                $updateDeposit->updatingAtDeleting($operation, $deposit);
+
+            }
+            catch (\Exception $exception)
+            {
+                return [
+                    'error' => $exception->getMessage(),
+                    'code' => $exception->getCode(),
+                ];
+            }
         }
 
         return [
@@ -57,9 +68,19 @@ class EntityUpdateService
         $operation->load(['category', 'type']);
         if ($operation->deposit_id)
         {
-            $deposit = DepositGetAction::getDeposit($operation->deposit_id);
-            $updateDeposit = new DepositsUpdateAction();
-            $updateDeposit->updatingAtCreation($operation, $deposit);
+            try
+            {
+                $deposit = DepositGetAction::getDeposit($operation->deposit_id);
+                $updateDeposit = new DepositsUpdateAction();
+                $updateDeposit->updatingAtCreation($operation, $deposit);
+            }
+            catch (\Exception $exception)
+            {
+                return [
+                    'error' => $exception->getMessage(),
+                    'code' => $exception->getCode(),
+                ];
+            }
         }
 
         $freeMoneyItem = FreeMoneyGetAction::getItem($operation->user_id);

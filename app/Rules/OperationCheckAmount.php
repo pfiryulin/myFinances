@@ -39,13 +39,20 @@ class OperationCheckAmount implements ValidationRule, DataAwareRule
 
         if ($this->typeId == Type::DEPOSIT && $this->categoryId == Category::FROM_DEPOSIT)
         {
-            $depositAmount = DepositGetAction::getDeposit($this->data['deposit'])->amount;
-            if($depositAmount < $value)
+            try
             {
-                $fail('There are not enough funds on deposit');
-            }
+                $depositAmount = DepositGetAction::getDeposit($this->data['deposit'])->amount;
+                if($depositAmount < $value)
+                {
+                    $fail('There are not enough funds on deposit');
+                }
 
-            return;
+                return;
+            }
+            catch (\Exception $exception)
+            {
+                $fail($exception->getMessage());
+            }
         }
 
         $availableFunds = FreeMoneyGetAction::getItem($this->userId);

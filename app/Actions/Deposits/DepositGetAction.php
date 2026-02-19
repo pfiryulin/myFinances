@@ -3,6 +3,7 @@
 namespace App\Actions\Deposits;
 
 use App\Models\Deposit;
+use Illuminate\Support\Facades\Auth;
 
 class DepositGetAction
 {
@@ -13,6 +14,11 @@ class DepositGetAction
      */
     public static function getDeposit($id) : Deposit | null
     {
-        return Deposit::find($id);
+        $deposit =Deposit::where(['id' => $id, 'user_id' => Auth::user()->id])->first();
+        if(!$deposit)
+        {
+            throw new \Exception('Deposit not found');
+        }
+        return $deposit;
     }
 }
