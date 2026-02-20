@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Deposits\DepositGetAction;
 use App\Http\Resources\DepositeResource;
 use App\Models\Deposit;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -37,14 +38,45 @@ class DepositController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request) : RedirectResponse
+    public function store(Request $request) : DepositeResource
     {
-        $newDeposite = Deposit::create([
+        $newDeposit = Deposit::create([
             'user_id' => Auth::id(),
             'name'    => $request['name'],
             'amount'  => $request['amount'],
             'comment' => $request['comment'],
         ]);
-        return redirect()->route('deposit');
+       return new DepositeResource($newDeposit);
+    }
+
+    public function show(int $id) : DepositeResource|Response
+    {
+        try
+        {
+            $deposit = DepositGetAction::getDeposit($id);
+            return new DepositeResource($deposit);
+        }
+        catch (\Exception $exception)
+        {
+            return response(['message' => $exception->getMessage()], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    public function update(Request $request, int $id) : DepositeResource|Response
+    {
+        try{
+            $deposit = DepositGetAction::getDeposit($id);
+            if($deposit->update($request->all()))
+            {
+                return new DepositeResource($deposit);
+            }
+            else{
+                throw new \Exception("Unable to update Deposit");
+            }
+        }
+        catch (\Exception $exception)
+        {
+            return response(['message' => $exception->getMessage()], $exception->getCode());
+        }
     }
 }

@@ -43,5 +43,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('type/all', [TypeController::class, 'allList']);
 
     Route::get('deposit', [DepositController::class, 'index']);
+    Route::get('deposit/{id}', [DepositController::class, 'show']);
+    Route::post('deposit', [DepositController::class, 'store']);
+    Route::put('deposit/{id}', [DepositController::class, 'update']);
 });
 
