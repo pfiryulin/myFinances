@@ -46,5 +46,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('deposit/{id}', [DepositController::class, 'show']);
     Route::post('deposit', [DepositController::class, 'store']);
     Route::put('deposit/{id}', [DepositController::class, 'update']);
+    Route::delete('deposit/{id}', [DepositController::class, 'destroy']);
 });
 

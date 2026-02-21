@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Deposits\DepositGetAction;
 use App\Http\Resources\DepositeResource;
 use App\Models\Deposit;
+use App\Services\Deposits\DepositDeleteService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
@@ -78,5 +79,20 @@ class DepositController extends Controller
         {
             return response(['message' => $exception->getMessage()], $exception->getCode());
         }
+    }
+
+    public function destroy(int $id) : int
+    {
+        try
+        {
+            $deposit = DepositGetAction::getDeposit($id);
+            return $id;
+        }
+        catch (\Exception $exception)
+        {
+            return response(['message' => $exception->getMessage()], $exception->getCode());
+        }
+
+
     }
 }

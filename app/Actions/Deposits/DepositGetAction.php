@@ -12,7 +12,7 @@ class DepositGetAction
      *
      * @return \App\Models\Deposit|null
      */
-    public static function getDeposit($id) : Deposit | null
+    public static function  getDeposit($id) : Deposit | null
     {
         $deposit =Deposit::where(['id' => $id, 'user_id' => Auth::user()->id])->first();
         if(!$deposit)
