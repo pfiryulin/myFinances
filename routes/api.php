@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\OperationController;
+use App\Http\Controllers\OperationReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TypeController;
@@ -47,5 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('deposit', [DepositController::class, 'store']);
     Route::put('deposit/{id}', [DepositController::class, 'update']);
     Route::delete('deposit/{id}', [DepositController::class, 'destroy']);
+
+    Route::get('report', [OperationReportController::class, 'index']);
 });
 
