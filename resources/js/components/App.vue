@@ -17,14 +17,17 @@ function updateToken()
 
 <template>
     <Header/>
+    APP PAGE
     <div class="container">
+        APP PAGE2
         <div v-if="!authToken" class="login form">
             <LoginForm
                 @update-token="updateToken"
             />
         </div>
-        <div v-else>
+        <div v-else class="content">
             <component :is="tabs[currentTab]" :authToken="authToken"></component>
+            <span>APP PAGE 3</span>
         </div>
     </div>
     <Footer/>

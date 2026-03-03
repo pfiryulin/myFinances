@@ -40,12 +40,14 @@ async function getOperation(){
 </script>
 
 <template>
+    HOME PAGE
     <h1 class="title is-3">Сводная страница</h1>
 <!--    <pre>{{operationSummaryList}}</pre>-->
 
 
 
-    <div v-if="isLoaded" class="table-container">
+<!--    <div v-if="isLoaded" class="table-container">-->
+    <div class="table-container">
         <table class="table is-bordered">
             <tr>
                 <th>Категория</th>
@@ -62,7 +64,7 @@ async function getOperation(){
             </tr>
         </table>
     </div>
-    <div v-else>Loaded...</div>
+<!--    <div v-else>Loaded...</div>-->
 
 </template>
 

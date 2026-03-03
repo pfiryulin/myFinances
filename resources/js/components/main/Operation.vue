@@ -35,8 +35,9 @@ async function getOperation(){
 </script>
 
 <template>
+    OPERATION PAGE
     <div class="operation__table">
-        <table v-if="operationsList.value">
+        <table v-if="operationsList">
             <tr>
                 <th>##</th>
                 <th>Дата</th>
@@ -45,7 +46,7 @@ async function getOperation(){
                 <th>Сумма</th>
                 <th>Комментарий</th>
             </tr>
-            <tr v-for="(operation, index) in operationsList">
+            <tr v-for="(operation, index) in operationsList.data">
                 <td>{{ index + 1 }}</td>
                 <td>{{ operation.created_at }}</td>
                 <td>{{ operation.type.name }}</td>

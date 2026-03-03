@@ -4,6 +4,7 @@
 
 <template>
   <footer>
+      FOOTER
     <div class="footer__items">
         <FooterItem />
     </div>
