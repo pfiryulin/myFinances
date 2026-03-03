@@ -87,12 +87,12 @@ class EntityUpdateService
         $updateFreeMoney = new FreeMoneyUpdateAction();
         $freeMoney = $updateFreeMoney->updatingAtCreation($operation, $freeMoneyItem);
 
-        FreeMoneyHistory::register(
-            $operation->user_id,
-            $freeMoneyItem->id,
-            $freeMoneyItem->amount,
-            $freeMoneyItem->updated_at
-        );
+//        FreeMoneyHistory::register(
+//            $operation->user_id,
+//            $freeMoneyItem->id,
+//            $freeMoneyItem->amount,
+//            $freeMoneyItem->updated_at
+//        );
 
         $depositsAmount = DepositsGetAmountAction::getDepositsAmount($operation->user_id);
 

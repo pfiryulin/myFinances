@@ -11,11 +11,6 @@ class OperationReportController extends Controller
 {
     public function index(Request $request)
     {
-//        $report = Operation::where('user_id', auth()->user()->id)
-//            ->whereYear('created_at', ($request->year) ?? date('Y'))
-//                           ->with(['type','category'])
-//            ->groupBy('type_id', 'category_id')
-//            ->get();
         $userId = auth()->user()->id;
         $year = 2026;
         $result = DB::select("
@@ -61,7 +56,6 @@ class OperationReportController extends Controller
             'user_id' => $userId,
             'year' => $year,
         ]);
-dump($result);
         return $result;
     }
 }

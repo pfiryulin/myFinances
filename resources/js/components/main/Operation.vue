@@ -13,7 +13,7 @@ async function getOperation(){
     try{
         let request = await fetch('/api/operations/',
             {
-                method: 'post',
+                method: 'get',
                 headers: {
                     'Content-Type': 'aplication/json',
                     Accept: 'aplication/json',
@@ -22,6 +22,7 @@ async function getOperation(){
             }
         )
         operationsList.value = await (request.json());
+        console.log(123);
         console.log(operationsList.value);
     }
     catch (error){
@@ -35,7 +36,7 @@ async function getOperation(){
 
 <template>
     <div class="operation__table">
-        <table v-if="operationsList">
+        <table v-if="operationsList.value">
             <tr>
                 <th>##</th>
                 <th>Дата</th>

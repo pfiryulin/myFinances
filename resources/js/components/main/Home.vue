@@ -16,9 +16,9 @@ onMounted(getOperation());
 
 async function getOperation(){
     try{
-        let request = await fetch('/api/home/',
+        let request = await fetch('/api/operations',
             {
-                method: 'post',
+                method: 'get',
                 headers: {
                     'Content-Type': 'aplication/json',
                     Accept: 'aplication/json',
@@ -46,21 +46,21 @@ async function getOperation(){
 
 
     <div v-if="isLoaded" class="table-container">
-<!--        <table class="table is-bordered">-->
-<!--            <tr>-->
-<!--                <th>Категория</th>-->
-<!--                <th v-for="mounth in operationSummaryList.months">-->
-<!--                    {{ mounth }}-->
-<!--                </th>-->
-<!--                <th>Итого</th>-->
-<!--            </tr>-->
-<!--            <tr v-for="row in operationSummaryList.table">-->
-<!--                <td>{{ row.category }}</td>-->
-<!--                <td v-for="mounth in operationSummaryList.months">-->
-<!--                    {{ row.amounts[mounth] }}-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--        </table>-->
+        <table class="table is-bordered">
+            <tr>
+                <th>Категория</th>
+                <th v-for="mounth in operationSummaryList.months">
+                    {{ mounth }}
+                </th>
+                <th>Итого</th>
+            </tr>
+            <tr v-for="row in operationSummaryList.table">
+                <td>{{ row.category }}</td>
+                <td v-for="mounth in operationSummaryList.months">
+                    {{ row.amounts[mounth] }}
+                </td>
+            </tr>
+        </table>
     </div>
     <div v-else>Loaded...</div>
 
