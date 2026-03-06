@@ -4,27 +4,17 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\OperationReportController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TypeController;
 use App\Http\Controllers\DepositController;
 
+Route::post('/login', [UserController::class, 'login'])->name('login');
 
-Route::post('/login', function (Request $request) {
-    if (!Auth::attempt($request->only('email', 'password'))) {
-        abort(401, 'Invalid credentials');
-    }
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-    $token = Auth::user()->createToken('auth-token')->plainTextToken;
-    return response()->json(['token' => $token]);
-});
 
-Route::post('/logout', [IndexController::class, 'logout'])->name('logout');
-
-Route::get('/user', function ()
-{
-    return auth()->user()->id;
-})->middleware('auth:sanctum');
 
 
 Route::post('/index/', [IndexController::class, 'index'])->name('apiIndex')->middleware('auth:sanctum');
@@ -52,5 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('deposit/{id}', [DepositController::class, 'destroy']);
 
     Route::get('report', [OperationReportController::class, 'index']);
+
+    Route::get('/user', [UserController::class, 'index'])->middleware('auth:sanctum');
 });
 

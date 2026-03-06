@@ -16,30 +16,6 @@ class IndexController extends Controller
         return view('index');
     }
 
-    public function login() : View
-    {
-//        dd($request);
-//        if (!Auth::attempt($request->only('email', 'password'))) {
-//            throw ValidationException::withMessages([
-//                'email' => __('auth.failed'),
-//            ]);
-//        }
-//
-//        $token = Auth::user()->createToken('spa-token')->plainTextToken;
-//        return response()->json(['token' => $token]);
-        return view('login');
-    }
-
-    public function logout(Request $request) : JsonResponse
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-
-        $token = $request->session()->regenerateToken();
-
-        return response()->json(['кончилась сессия']);
-
-    }
 
     public function signIn(Request $request)
     {

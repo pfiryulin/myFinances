@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -29,9 +30,29 @@ class UserController extends Controller
         return redirect()->route('index');
     }
 
-    public function index(): View
+    public function login(Request $request) : JsonResponse
     {
-        $users = User::all();
-        return view('users', ['users' => $users]);
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            abort(401, 'Invalid credentials');
+        }
+
+        $token = Auth::user()->createToken('auth-token')->plainTextToken;
+        return response()->json(['token' => $token]);
+    }
+
+
+    public function logout(Request $request) : JsonResponse
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return response()->json(['Logout']);
+    }
+
+    public function index(): UserResource
+    {
+        return new UserResource(Auth::user());
     }
 }
