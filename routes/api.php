@@ -11,6 +11,7 @@ use App\Http\Controllers\DepositController;
 
 
 Route::post('/login', function (Request $request) {
+//    dd($request);
     if (!Auth::attempt($request->only('email', 'password'))) {
         abort(401, 'Invalid credentials');
     }

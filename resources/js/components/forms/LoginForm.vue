@@ -7,49 +7,83 @@
     const login = ref('');
     const password = ref('');
     const error = ref(null);
-    const userToken = ref(null);
 
+    // const xsrfCoocks = Cookies.get('XSRF-TOKEN');
+    async function signUp(){
+        error.value = null;
+        try{
+            // if(Cookies.get('XSRF-TOKEN'))
+            // {
+                await fetch('/sanctum/csrf-cookie', {
+                    method: 'GET',
+                    headers: {
+                        "Accept": "application/json"
+                    },
+                    credentials: "include"
+                });
+            // }
 
+            let requestLogin;
+            let body = new FormData();
+            body.append('email', login.value);
+            body.append('password', password.value);
 
-    async function handleSubmitLogin(){
-        let userData = {
-            email: login.value, password: password.value
+            requestLogin = await fetch('/api/login',{
+                method: 'POST',
+                body: body,
+                headers: {
+                    "Accept": "application/json",
+                    'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')
+                },
+                credentials: "include"
+
+            })
+
+            if(!requestLogin.ok){
+                throw new Error("Login failed")
+            }
+            let responce = await requestLogin.json();
+            console.log(responce);
         }
-        const res = await fetch('/api/login/', {
-            method: 'post', headers: {
-                'Content-Type': 'aplication/json', 'Accept': 'aplication/json'
-            }, body: JSON.stringify(userData)
-        });
-        userToken.value = await res.json();
-        console.log(userToken.value.token)
-        await Cookies.set('authToken', userToken.value.token, {expires: 2});
-        emit('update-token');
+        catch (e) {
+            error.value = e.message
+            console.log(error.value);
+        }
     }
+
+    async function getOperations()
+    {
+        let operations = await fetch('/api/operations',{
+            method: 'GET',
+            headers: {
+                "Accept": "application/json"
+            },
+            credentials: "include"
+        })
+
+        console.log(await operations.json());
+    }
+
+
+
 </script>
 
 <template>
-    <form action="" @submit.prevent="handleSubmitLogin">
-        <div class="form__items">
-            <div class="form__item">
-                <input type="text" name="login" id="" placeholder="Логин" required v-model="login">
-            </div>
-            <div class="form__item">
-                <input type="password" name="password" id="" placeholder="Пароль" required v-model="password">
-            </div>
-            <div class="form__item">
-                <input class="form__submit" type="submit" value="Войти">
-            </div>
-            <div class="form__item error" v-if="error">
-                <span>{{ error }}</span>
-            </div>
+
+    <form @submit.prevent="signUp">
+        <div class="field">
+            <input type="text" v-model.lazy="login">
         </div>
-        <div class="form__links">
-            <a href="">Регистрация</a>
-            <a href="">Забыли пароль?</a>
+        <div class="field">
+            <input type="password" name="" id="" v-model.lazy="password">
+        </div>
+        <div class="field">
+            <button type="submit">login</button>
         </div>
     </form>
+
+    <button @click="getOperations">Operations</button>
+
+
 </template>
 
-<style scoped>
-
-</style>
