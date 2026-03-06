@@ -19,7 +19,7 @@ Route::post('/login', function (Request $request) {
     return response()->json(['token' => $token]);
 });
 
-Route::post('/logout', [IndexController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
+Route::post('/logout', [IndexController::class, 'logout'])->name('logout');
 
 Route::get('/user', function ()
 {
