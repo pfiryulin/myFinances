@@ -35,9 +35,9 @@ class IndexController extends Controller
         Auth::logout();
         $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+        $token = $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['кончилась сессия']);
 
     }
 

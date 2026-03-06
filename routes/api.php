@@ -11,7 +11,6 @@ use App\Http\Controllers\DepositController;
 
 
 Route::post('/login', function (Request $request) {
-//    dd($request);
     if (!Auth::attempt($request->only('email', 'password'))) {
         abort(401, 'Invalid credentials');
     }
@@ -19,6 +18,8 @@ Route::post('/login', function (Request $request) {
     $token = Auth::user()->createToken('auth-token')->plainTextToken;
     return response()->json(['token' => $token]);
 });
+
+Route::post('/logout', [IndexController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
 
 Route::get('/user', function ()
 {

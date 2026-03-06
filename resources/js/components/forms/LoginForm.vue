@@ -64,25 +64,58 @@
         console.log(await operations.json());
     }
 
+    async function logout()
+    {
+        try
+        {
+            let logoutRequest = await fetch('/api/logout', {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json",
+                    'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')
+                },
+            });
+
+            if(!logoutRequest.ok){
+                throw new new Error("Logout сломался");
+            }
+            console.log(logoutRequest.json());
+        }
+        catch (e)
+        {
+            console.log(e.message);
+        }
+
+    }
+
 
 
 </script>
 
 <template>
+    <div>
+        <form @submit.prevent="signUp">
+            <div class="field">
+                <input type="text" v-model.lazy="login">
+            </div>
+            <div class="field">
+                <input type="password" name="" id="" v-model.lazy="password">
+            </div>
+            <div class="field">
+                <button type="submit">login</button>
+            </div>
+        </form>
+    </div>
+    <div>
+        <button @click="getOperations">Operations</button>
+    </div>
 
-    <form @submit.prevent="signUp">
-        <div class="field">
-            <input type="text" v-model.lazy="login">
-        </div>
-        <div class="field">
-            <input type="password" name="" id="" v-model.lazy="password">
-        </div>
-        <div class="field">
-            <button type="submit">login</button>
-        </div>
-    </form>
+    <div>
+        <a @click.prevent="logout" href="#">LOGOUT</a>
+    </div>
 
-    <button @click="getOperations">Operations</button>
+
 
 
 </template>
