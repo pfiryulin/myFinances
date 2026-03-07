@@ -14,10 +14,9 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-
-
-
 Route::post('/index/', [IndexController::class, 'index'])->name('apiIndex')->middleware('auth:sanctum');
+
+Route::post('/user', [UserController::class, 'store'])->name('create-user');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('operations', [OperationController::class, 'index']);
@@ -43,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('report', [OperationReportController::class, 'index']);
 
-    Route::get('/user', [UserController::class, 'index'])->middleware('auth:sanctum');
+    Route::get('/user', [UserController::class, 'index'])->name('show-user');
+
 });
 

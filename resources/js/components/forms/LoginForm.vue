@@ -8,20 +8,21 @@ const login = ref('');
 const password = ref('');
 const error = ref(null);
 
+const userName = ref('');
+const eserEmail = ref('');
+const userPassword = ref('');
+
 // const xsrfCoocks = Cookies.get('XSRF-TOKEN');
 async function signUp()
 {
     error.value = null;
     try
     {
-        // if(Cookies.get('XSRF-TOKEN'))
-        // {
         await fetch('/sanctum/csrf-cookie', {
             method: 'GET', headers: {
                 "Accept": "application/json"
             }, credentials: "include"
         });
-        // }
 
         let requestLogin;
         let body = new FormData();
@@ -29,9 +30,13 @@ async function signUp()
         body.append('password', password.value);
 
         requestLogin = await fetch('/api/login', {
-            method: 'POST', body: body, headers: {
-                "Accept": "application/json", 'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')
-            }, credentials: "include"
+            method: 'POST',
+            body: body,
+            headers: {
+                "Accept": "application/json",
+                'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')
+            },
+            credentials: "include"
 
         })
 
@@ -94,6 +99,39 @@ async function getUser()
     console.log(r.json());
 }
 
+async function register()
+{
+    error.value = null;
+    await fetch('/sanctum/csrf-cookie', {
+        method: 'GET', headers: {
+            "Accept": "application/json"
+        }, credentials: "include"
+    });
+
+    try
+    {
+        let data = new FormData();
+        data.append('name', userName.value);
+        data.append('email', eserEmail.value);
+        data.append('password', userPassword.value);
+
+        let r = await fetch('api/user',{
+            method: 'POST',
+            headers:{
+                "Accept": "application/json",
+                'X-XSRF-TOKEN': Cookies.get('XSRF-TOKEN')
+            },
+            credentials: "include",
+            body: data
+        })
+    }
+    catch (e)
+    {
+        error.value = e.message;
+        console.log(error.value)
+    }
+}
+
 </script>
 
 <template>
@@ -115,6 +153,23 @@ async function getUser()
     </div>
     <div>
         <button @click="getUser">Get user</button>
+    </div>
+
+    <div>
+        <form action="" class="form" @submit.prevent="register">
+            <div class="fields">
+                <input type="text" v-model="userName" placeholder="Имя">
+            </div>
+            <div class="fields">
+                <input type="email" v-model="eserEmail" placeholder="email">
+            </div>
+            <div class="fields">
+                <input type="password" v-model="userPassword" placeholder="Пароль">
+            </div>
+            <div class="fields">
+                <input type="submit" value="Сохранить">
+            </div>
+        </form>
     </div>
 
     <div>
